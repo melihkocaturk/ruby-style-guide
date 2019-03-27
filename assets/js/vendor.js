@@ -32926,6 +32926,232 @@ Prism.languages.clike = {
 	'punctuation': /[{}[\];(),.:]/
 };
 
+/* **********************************************
+     Begin prism-ruby.js
+********************************************** */
+
+Prism.languages.ruby = Prism.languages.extend('clike', {
+	'comment': [
+		/#.*/,
+		{
+			pattern: /^=begin\s[\s\S]*?^=end/m,
+			greedy: true
+		}
+	],
+	'keyword': /\b(?:alias|and|BEGIN|begin|break|case|class|def|define_method|defined|do|each|else|elsif|END|end|ensure|false|for|if|in|module|new|next|nil|not|or|protected|private|public|raise|redo|require|rescue|retry|return|self|super|then|throw|true|undef|unless|until|when|while|yield)\b/
+});
+
+var interpolation = {
+	pattern: /#\{[^}]+\}/,
+	inside: {
+		'delimiter': {
+			pattern: /^#\{|\}$/,
+			alias: 'tag'
+		},
+		rest: Prism.languages.ruby
+	}
+};
+
+delete Prism.languages.ruby.function;
+
+Prism.languages.insertBefore('ruby', 'keyword', {
+	'regex': [
+		{
+			pattern: /%r([^a-zA-Z0-9\s{(\[<])(?:(?!\1)[^\\]|\\[\s\S])*\1[gim]{0,3}/,
+			greedy: true,
+			inside: {
+				'interpolation': interpolation
+			}
+		},
+		{
+			pattern: /%r\((?:[^()\\]|\\[\s\S])*\)[gim]{0,3}/,
+			greedy: true,
+			inside: {
+				'interpolation': interpolation
+			}
+		},
+		{
+			// Here we need to specifically allow interpolation
+			pattern: /%r\{(?:[^#{}\\]|#(?:\{[^}]+\})?|\\[\s\S])*\}[gim]{0,3}/,
+			greedy: true,
+			inside: {
+				'interpolation': interpolation
+			}
+		},
+		{
+			pattern: /%r\[(?:[^\[\]\\]|\\[\s\S])*\][gim]{0,3}/,
+			greedy: true,
+			inside: {
+				'interpolation': interpolation
+			}
+		},
+		{
+			pattern: /%r<(?:[^<>\\]|\\[\s\S])*>[gim]{0,3}/,
+			greedy: true,
+			inside: {
+				'interpolation': interpolation
+			}
+		},
+		{
+			pattern: /(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\\\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/,
+			lookbehind: true,
+			greedy: true
+		}
+	],
+	'variable': /[@$]+[a-zA-Z_]\w*(?:[?!]|\b)/,
+	'symbol': {
+		pattern: /(^|[^:]):[a-zA-Z_]\w*(?:[?!]|\b)/,
+		lookbehind: true
+	},
+	'method-definition': {
+		pattern: /(\bdef\s+)[\w.]+/,
+		lookbehind: true,
+		inside: {
+			'function': /\w+$/,
+			rest: Prism.languages.ruby
+		}
+	}
+});
+
+Prism.languages.insertBefore('ruby', 'number', {
+	'builtin': /\b(?:Array|Bignum|Binding|Class|Continuation|Dir|Exception|FalseClass|File|Stat|Fixnum|Float|Hash|Integer|IO|MatchData|Method|Module|NilClass|Numeric|Object|Proc|Range|Regexp|String|Struct|TMS|Symbol|ThreadGroup|Thread|Time|TrueClass)\b/,
+	'constant': /\b[A-Z]\w*(?:[?!]|\b)/
+});
+
+Prism.languages.ruby.string = [
+	{
+		pattern: /%[qQiIwWxs]?([^a-zA-Z0-9\s{(\[<])(?:(?!\1)[^\\]|\\[\s\S])*\1/,
+		greedy: true,
+		inside: {
+			'interpolation': interpolation
+		}
+	},
+	{
+		pattern: /%[qQiIwWxs]?\((?:[^()\\]|\\[\s\S])*\)/,
+		greedy: true,
+		inside: {
+			'interpolation': interpolation
+		}
+	},
+	{
+		// Here we need to specifically allow interpolation
+		pattern: /%[qQiIwWxs]?\{(?:[^#{}\\]|#(?:\{[^}]+\})?|\\[\s\S])*\}/,
+		greedy: true,
+		inside: {
+			'interpolation': interpolation
+		}
+	},
+	{
+		pattern: /%[qQiIwWxs]?\[(?:[^\[\]\\]|\\[\s\S])*\]/,
+		greedy: true,
+		inside: {
+			'interpolation': interpolation
+		}
+	},
+	{
+		pattern: /%[qQiIwWxs]?<(?:[^<>\\]|\\[\s\S])*>/,
+		greedy: true,
+		inside: {
+			'interpolation': interpolation
+		}
+	},
+	{
+		pattern: /("|')(?:#\{[^}]+\}|\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
+		greedy: true,
+		inside: {
+			'interpolation': interpolation
+		}
+	}
+];
+
+Prism.languages.rb = Prism.languages.ruby;
+
+/* **********************************************
+     Begin prism-bash.js
+********************************************** */
+
+var insideString = {
+	variable: [
+		// Arithmetic Environment
+		{
+			pattern: /\$?\(\([\s\S]+?\)\)/,
+			inside: {
+				// If there is a $ sign at the beginning highlight $(( and )) as variable
+				variable: [{
+						pattern: /(^\$\(\([\s\S]+)\)\)/,
+						lookbehind: true
+					},
+					/^\$\(\(/
+				],
+				number: /\b0x[\dA-Fa-f]+\b|(?:\b\d+\.?\d*|\B\.\d+)(?:[Ee]-?\d+)?/,
+				// Operators according to https://www.gnu.org/software/bash/manual/bashref.html#Shell-Arithmetic
+				operator: /--?|-=|\+\+?|\+=|!=?|~|\*\*?|\*=|\/=?|%=?|<<=?|>>=?|<=?|>=?|==?|&&?|&=|\^=?|\|\|?|\|=|\?|:/,
+				// If there is no $ sign at the beginning highlight (( and )) as punctuation
+				punctuation: /\(\(?|\)\)?|,|;/
+			}
+		},
+		// Command Substitution
+		{
+			pattern: /\$\([^)]+\)|`[^`]+`/,
+			greedy: true,
+			inside: {
+				variable: /^\$\(|^`|\)$|`$/
+			}
+		},
+		/\$(?:[\w#?*!@]+|\{[^}]+\})/i
+	]
+};
+
+Prism.languages.bash = {
+	'shebang': {
+		pattern: /^#!\s*\/bin\/bash|^#!\s*\/bin\/sh/,
+		alias: 'important'
+	},
+	'comment': {
+		pattern: /(^|[^"{\\])#.*/,
+		lookbehind: true
+	},
+	'string': [
+		//Support for Here-Documents https://en.wikipedia.org/wiki/Here_document
+		{
+			pattern: /((?:^|[^<])<<\s*)["']?(\w+?)["']?\s*\r?\n(?:[\s\S])*?\r?\n\2/,
+			lookbehind: true,
+			greedy: true,
+			inside: insideString
+		},
+		{
+			pattern: /(["'])(?:\\[\s\S]|\$\([^)]+\)|`[^`]+`|(?!\1)[^\\])*\1/,
+			greedy: true,
+			inside: insideString
+		}
+	],
+	'variable': insideString.variable,
+	// Originally based on http://ss64.com/bash/
+	'function': {
+		pattern: /(^|[\s;|&])(?:add|alias|apropos|apt|apt-cache|apt-get|aptitude|aspell|automysqlbackup|awk|basename|bash|bc|bconsole|bg|builtin|bzip2|cal|cat|cd|cfdisk|chgrp|chkconfig|chmod|chown|chroot|cksum|clear|cmp|comm|command|cp|cron|crontab|csplit|curl|cut|date|dc|dd|ddrescue|debootstrap|df|diff|diff3|dig|dir|dircolors|dirname|dirs|dmesg|du|egrep|eject|enable|env|ethtool|eval|exec|expand|expect|export|expr|fdformat|fdisk|fg|fgrep|file|find|fmt|fold|format|free|fsck|ftp|fuser|gawk|getopts|git|gparted|grep|groupadd|groupdel|groupmod|groups|grub-mkconfig|gzip|halt|hash|head|help|hg|history|host|hostname|htop|iconv|id|ifconfig|ifdown|ifup|import|install|ip|jobs|join|kill|killall|less|link|ln|locate|logname|logout|logrotate|look|lpc|lpr|lprint|lprintd|lprintq|lprm|ls|lsof|lynx|make|man|mc|mdadm|mkconfig|mkdir|mke2fs|mkfifo|mkfs|mkisofs|mknod|mkswap|mmv|more|most|mount|mtools|mtr|mutt|mv|nano|nc|netstat|nice|nl|nohup|notify-send|npm|nslookup|op|open|parted|passwd|paste|pathchk|ping|pkill|pnpm|popd|pr|printcap|printenv|printf|ps|pushd|pv|pwd|quota|quotacheck|quotactl|ram|rar|rcp|read|readarray|readonly|reboot|remsync|rename|renice|rev|rm|rmdir|rpm|rsync|scp|screen|sdiff|sed|sendmail|seq|service|sftp|shift|shopt|shutdown|sleep|slocate|sort|source|split|ssh|stat|strace|su|sudo|sum|suspend|swapon|sync|tail|tar|tee|test|time|timeout|times|top|touch|tr|traceroute|trap|tsort|tty|type|ulimit|umask|umount|unalias|uname|unexpand|uniq|units|unrar|unshar|unzip|update-grub|uptime|useradd|userdel|usermod|users|uudecode|uuencode|vdir|vi|vim|virsh|vmstat|wait|watch|wc|wget|whereis|which|who|whoami|write|xargs|xdg-open|yarn|yes|zip|zypper)(?=$|[\s;|&])/,
+		lookbehind: true
+	},
+	'keyword': {
+		pattern: /(^|[\s;|&])(?:let|:|\.|if|then|else|elif|fi|for|break|continue|while|in|case|function|select|do|done|until|echo|exit|return|set|declare)(?=$|[\s;|&])/,
+		lookbehind: true
+	},
+	'boolean': {
+		pattern: /(^|[\s;|&])(?:true|false)(?=$|[\s;|&])/,
+		lookbehind: true
+	},
+	'operator': /&&?|\|\|?|==?|!=?|<<<?|>>|<=?|>=?|=~/,
+	'punctuation': /\$?\(\(?|\)\)?|\.\.|[{}[\];]/
+};
+
+var inside = insideString.variable[1].inside;
+inside.string = Prism.languages.bash.string;
+inside['function'] = Prism.languages.bash['function'];
+inside.keyword = Prism.languages.bash.keyword;
+inside['boolean'] = Prism.languages.bash['boolean'];
+inside.operator = Prism.languages.bash.operator;
+inside.punctuation = Prism.languages.bash.punctuation;
+
+Prism.languages.shell = Prism.languages.bash;
 
 /* **********************************************
      Begin prism-javascript.js

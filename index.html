@@ -37,7 +37,7 @@
                             <a class="nav-link active" href="#">Ruby</a>
                           </li>
                           <li class="nav-item">
-                            <a class="nav-link" href="#">Rails</a>
+                            <a class="nav-link" href="#">Ruby on Rails</a>
                           </li>
                         </ul>
                       </div>
@@ -110,11 +110,60 @@
               <article class="col-md-9 col-xxl-8">
 
                 <h1 class="h2 font-weight-light"><b>Ruby</b> Stil Rehberi</h1>
-                <p>Ruby geliştiricisi olarak bir şey beni her zaman rahatsız etti - Python geliştiricileri harika bir programlama stili referansına (PEP-8) sahipler ve Ruby kodlama stilini ve en iyi uygulamaları belgeleyen resmi bir rehberimiz olmadı. Ve stilin önemli olduğuna inanıyorum, ayrıca Ruby gibi büyük bir hacker topluluğu bu belgeyi üretebilecek kapasitede olmalı.</p>
+
+                <section>
+                  <h2 class="section-title-2">Giriş</h2>
+
+                  <p>Ruby geliştiricisi olarak bir şey beni her zaman rahatsız etti - Python geliştiricileri harika bir programlama stili referansına (PEP-8) sahipler ve Ruby kodlama stilini ve en iyi uygulamaları belgeleyen resmi bir rehberimiz olmadı. Ve stilin önemli olduğuna inanıyorum, ayrıca Ruby gibi büyük bir hacker topluluğu bu belgeyi üretebilecek kapasitede olmalı.</p>
+
+                  <p>Bu rehber, şirketimizin Ruby kodlama yönergeleri olarak hayatına başladı. Bir noktada, yaptığım işin genel olarak Ruby topluluğunun üyeleri için ilginç olabileceğine ve dünyanın başka bir şirket içi rehbere ihtiyaç duymadığına karar verdim. Ancak dünya, Ruby programcılığına yönelik, topluluğun yürüttüğü ve topluluğun onayladığı uygulamalardan ve stil reçetelerinden kesinlikle yararlanabilir.</p>
+
+                  <p>Rehberin başlangıcından beri, dünyanın her tarafındaki olağanüstü Ruby topluluğu üyelerinden çok fazla geri bildirim aldım. Tüm öneri ve destek için teşekkür ederiz! Birlikte, her Ruby geliştiricisi için bir kaynak sağlayabiliriz.</p>
+
+                  <p>Bu arada, Rails ile ilgileniyorsanız tamamlayıcı <a href="#">Ruby on Rails Stil Rehberi</a>'ne göz atmak isteyebilirsiniz.</p>
+                </section>
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-1">
                   <h2 class="section-title-2">Kaynak Kod Düzeni <a data-scroll href="#section-1" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+
+                  <ul>
+                    <li><p>Kaynak dosya kodlaması olarak UTF-8 kullanın.</p></li>
+                    <li>
+                      <p>Girinti seviyesi başına iki boşluk kullanın (yumuşak sekme). Sert sekme kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad - four spaces
+def some_method
+    do_something
+end
+
+# good
+def some_method
+  do_something
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Unix tarzı satır sonları kullanın. (*BSD, Solaris, Linux, macOS kullanıcıları varsayılan olarak karşılanır, Windows kullanıcılarının daha dikkatli olmaları gerekir.)</p>
+                      
+                      <p>Git kullanıyorsanız, projenizi Windows satır sonlarından korumak için aşağıdaki yapılandırma ayarını eklemek isteyebilirsiniz.</p>
+                      <pre><code  class="language-bash">$ git config --global core.autocrlf true</code></pre>
+                    </li>
+                    <li>
+                      <p>İfadeleri ayırmak için <code>;</code> kullanmayın. Sonuç olarak her satırda bir ifade kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+puts 'foobar'; # superfluous semicolon
+
+puts 'foo'; puts 'bar' # two expressions on the same line
+
+# good
+puts 'foobar'
+
+puts 'foo'
+puts 'bar'
+
+puts 'foo', 'bar' # this applies to puts in particular</code></pre>
+                    </li>
+                  </ul>
+
                   <p>...</p>
                 </section>
                 <!-- / kaynak kod düzeni -->
@@ -297,7 +346,7 @@
                 Türkçe
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">English</a>
+                <a class="dropdown-item" href="https://github.com/rubocop-hq/ruby-style-guide" target="blank" rel="nofollow">English</a>
               </div>
             </div>
           </div>
@@ -306,7 +355,7 @@
     </footer>
     <!-- / footer -->
 
-    <script src="assets/js/vendor.min.js"></script>
+    <script src="assets/js/vendor.js"></script>
     <script src="assets/js/app.js"></script>
   </body>
 </html>
