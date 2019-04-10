@@ -162,9 +162,434 @@ puts 'bar'
 
 puts 'foo', 'bar' # this applies to puts in particular</code></pre>
                     </li>
-                  </ul>
+                    <li>
+                      <p>Gövdesiz sınıf tanımları için tek satırlı bir format seçin.</p>
+                      <pre><code class="language-ruby"># bad
+class FooError < StandardError
+end
 
-                  <p>...</p>
+# okish
+class FooError < StandardError; end
+
+# good
+FooError = Class.new(StandardError)</code></pre>
+                    </li>
+                    <li>
+                      <p>Tek satırlı yöntemlerden kaçının. Vahşi doğada biraz popüler olsalarda, sözdizimleri yüzünden kullanılmaları tercih edilmez. Her halükarda - tek satırlı bir yöntemde birden fazla ifade bulunmamalıdır.</p>
+                      <pre><code class="language-ruby"># bad
+def too_much; something; something_else; end
+
+# okish - notice that the first ; is required
+def no_braces_method; body end
+
+# okish - notice that the second ; is optional
+def no_braces_method; body; end
+
+# okish - valid syntax, but no ; makes it kind of hard to read
+def some_method() body end
+
+# good
+def some_method
+  body
+end</code></pre>
+                      <p>Kuralın bir istisnası boş gövdeli yöntemlerdir.</p>
+<pre><code class="language-ruby"># good
+def no_op; end</code></pre>
+                    </li>
+                    <li>
+                      <p>Operatörlerin etrafında, virgül, iki nokta üst üste ve noktalı virgülden sonra boşluk kullanın. Boşluk karakteri (çoğunlukla) Ruby yorumlayıcısı için anlamsızdır, ancak uygun kullanımı kolayca okunabilir kod yazmanın anahtarıdır.</p>
+                      <pre><code class="language-ruby">sum = 1 + 2
+a, b = 1, 2
+class FooError < StandardError; end</code></pre>
+                      <p>Bir kaç istisna var. Bir tanesi üs operatörü:</p>
+                      <pre><code class="language-ruby"># bad
+e = M * c ** 2
+
+# good
+e = M * c**2</code></pre>
+                      <p>Bir başka istisna da, rasyonel literallerin içindeki eğik çizgi:</p>
+                      <pre><code class="language-ruby"># bad
+o_scale = 1 / 48r
+
+# good
+o_scale = 1/48r</code></pre>
+                      <p>Diğer bir istisna, güvenli navigasyon operatörüdür:</p>
+                      <pre><code class="language-ruby"># bad
+foo &. bar
+foo &.bar
+foo&. bar
+
+# good
+foo&.bar</code></pre>
+                    </li>
+                    <li>
+                      <p>Köşeli parantezlerde boşluk kullanmayın. Süslü parantezlerde boşluk kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+some( arg ).other
+[ 1, 2, 3 ].each{|e| puts e}
+
+# good
+some(arg).other
+[1, 2, 3].each { |e| puts e }</code></pre>
+                      <p><code>{</code> ve <code>}</code> blok, çırpı (hash) ve dize interpolasyonu için kullanıldığından biraz daha açıklamayı hak ediyor. Çırpı için iki stil kabul edilebilir sayılır. İkinci seçenek, blok ve çırpı arasında görsel fark ekleme avantajına sahiptir. Hangisini seçerseniz seçin - tutarlı bir şekilde uygulayın.</p>
+                      <pre><code class="language-ruby"># good - space after { and before }
+{ one: 1, two: 2 }
+
+# good - no space after { and before }
+{one: 1, two: 2}</code></pre>
+                      <p>İnterpolasyonlu ifadelerde, parantezlerin içinde boşluk olmamalıdır.</p>
+                      <pre><code class="language-ruby"># bad
+"From: #{ user.first_name }, #{ user.last_name }"
+
+# good
+"From: #{user.first_name}, #{user.last_name}"</code></pre>
+                    </li>
+                    <li>
+                      <p><code>!</code> işaretinden sonra boşluk kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+! something
+
+# good
+!something</code></pre>
+                    </li>
+                    <li>
+                      <p>Aralık literalleri içinde boşluk kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+1 .. 3
+'a' ... 'z'
+
+# good
+1..3
+'a'...'z'</code></pre>
+                    </li>
+                    <li>
+                      <p><code>when</code>, <code>case</code> kadar derin olmalıdır. Hem "The Ruby Programming Language" hem de "Programming Ruby" de oluşturulan stil budur. Tarihsel olarak, <code>case</code> ve <code>switch</code> ifadelerinin blok olmadığı gerçeğinden kaynaklanmaktadır, bu nedenle girintili olmamalıdır.</p>
+                      <pre><code class="language-ruby"># bad
+case
+  when song.name == 'Misty'
+    puts 'Not again!'
+  when song.duration > 120
+    puts 'Too long!'
+  when Time.now.hour > 21
+    puts "It's too late"
+  else
+    song.play
+end
+
+# good
+case
+when song.name == 'Misty'
+  puts 'Not again!'
+when song.duration > 120
+  puts 'Too long!'
+when Time.now.hour > 21
+  puts "It's too late"
+else
+  song.play
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Koşullu bir ifadenin sonucunu bir değişkene atadığınızda, dalların normal hizalamasını koruyun.</p>
+                      <pre><code class="language-ruby"># bad - pretty convoluted
+kind = case year
+when 1850..1889 then 'Blues'
+when 1890..1909 then 'Ragtime'
+when 1910..1929 then 'New Orleans Jazz'
+when 1930..1939 then 'Swing'
+when 1940..1950 then 'Bebop'
+else 'Jazz'
+end
+
+result = if some_cond
+  calc_something
+else
+  calc_something_else
+end
+
+# good - it's apparent what's going on
+kind = case year
+       when 1850..1889 then 'Blues'
+       when 1890..1909 then 'Ragtime'
+       when 1910..1929 then 'New Orleans Jazz'
+       when 1930..1939 then 'Swing'
+       when 1940..1950 then 'Bebop'
+       else 'Jazz'
+       end
+
+result = if some_cond
+           calc_something
+         else
+           calc_something_else
+         end
+
+# good (and a bit more width efficient)
+kind =
+  case year
+  when 1850..1889 then 'Blues'
+  when 1890..1909 then 'Ragtime'
+  when 1910..1929 then 'New Orleans Jazz'
+  when 1930..1939 then 'Swing'
+  when 1940..1950 then 'Bebop'
+  else 'Jazz'
+  end
+
+result =
+  if some_cond
+    calc_something
+  else
+    calc_something_else
+  end</code></pre>
+                    </li>
+                    <li>
+                      <p>Yöntem tanımları arasında ve ayrıca yöntemleri dahili olarak mantıksal paragraflara ayırmak için boş satırlar kullanın.</p>
+                      <pre><code class="language-ruby">def some_method
+  data = initialize(options)
+
+  data.manipulate!
+
+  data.result
+end
+
+def some_method
+  result
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Üst üste birkaç boş satır kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad - It has two empty lines.
+some_method
+
+
+some_method
+
+# good
+some_method
+
+some_method</code></pre>
+                    </li>
+                    <li>
+                      <p>Erişim belirteçlerinde boş satır kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+class Foo
+  attr_reader :foo
+  def foo
+    # do something...
+  end
+end
+
+# good
+class Foo
+  attr_reader :foo
+
+  def foo
+    # do something...
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Yöntem, sınıf, modül ve blok gövdelerinin etrafında boş satır kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+class Foo
+
+  def foo
+
+    begin
+
+      do_something do
+
+        something
+
+      end
+
+    rescue
+
+      something
+
+    end
+
+  end
+
+end
+
+# good
+class Foo
+  def foo
+    begin
+      do_something do
+        something
+      end
+    rescue
+      something
+    end
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Bir yöntem çağrısında, özellikle parametreler ayrı satırlarda olmadığında, son parametreden sonra virgülten kaçının.</p>
+                      <pre><code class="language-ruby"># bad - easier to move/add/remove parameters, but still not preferred
+some_method(
+  size,
+  count,
+  color,
+)
+
+# bad
+some_method(size, count, color, )
+
+# good
+some_method(size, count, color)</code></pre>
+                    </li>
+                    <li>
+                      <p>Yöntem parametrelerine varsayılan değer atarken <code>=</code> işlecinin etrafında boşluk kullanın:</p>
+                      <pre><code class="language-ruby"># bad
+def some_method(arg1=:default, arg2=nil, arg3=[])
+  # do something...
+end
+
+# good
+def some_method(arg1 = :default, arg2 = nil, arg3 = [])
+  # do something...
+end</code></pre>
+                      <p>Birkaç Ruby kitabı birinci stili önerirken, ikincisi pratikte daha belirgindir (ve tartışmalı olarak biraz daha okunaklıdır).</p>
+                    </li>
+                    <li>
+                      <p>Gerekmiyorsa satırı devam ettirmekten kaçının. Uygulamada, dize bitiştirme dışında bir şey için kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+result = 1 - \
+         2
+
+# good (but still ugly as hell)
+result = 1 \
+         - 2
+
+long_string = 'First part of the long string' \
+              ' and second part of the long string'</code></pre>
+                    </li>
+                    <li>
+                      <p>Tutarlı bir çok satırlı yöntem zincirleme stili benimseyin. Ruby topluluğunda, ikisi de iyi uygulama olarak görülen iki popüler stil vardır.</p>
+                      <ul>
+                        <li>
+                          <p><b>(Seçenek A)</b> Başka bir satırda zincirleme yöntem çağrısı devam ederken, <code>.</code> 'yı ikinci satırda tutun.</p>
+                          <pre><code class="language-ruby"># bad - need to consult first line to understand second line
+one.two.three.
+  four
+
+# good - it's immediately clear what's going on the second line
+one.two.three
+  .four</code></pre>
+                        </li>
+                        <li>
+                          <p><b>(Seçenek B)</b> Zincirleme yöntem çağrısı başka bir satıra devam ederken, ifadenin devam ettiğini belirtmek için ilk satıra <code>.</code> ekleyin.</p>
+                          <pre><code class="language-ruby"># bad - need to read ahead to the second line to know that the chain continues
+one.two.three
+  .four
+
+# good - it's immediately clear that the expression continues beyond the first line
+one.two.three.
+  four</code></pre>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <p>Birden fazla satıra yayılan yöntem parametrelerini hizalayın. Satır uzunluğu kısıtlamaları nedeniyle parametreleri hizalamak uygun olmadığında, ilk satırdan sonra satırlar için tek girinti de kabul edilebilir.</p>
+                      <pre><code class="language-ruby"># starting point (line is too long)
+def send_mail(source)
+  Mailer.deliver(to: 'bob@example.com', from: 'us@example.com', subject: 'Important message', body: source.text)
+end
+
+# bad (double indent)
+def send_mail(source)
+  Mailer.deliver(
+      to: 'bob@example.com',
+      from: 'us@example.com',
+      subject: 'Important message',
+      body: source.text)
+end
+
+# good
+def send_mail(source)
+  Mailer.deliver(to: 'bob@example.com',
+                 from: 'us@example.com',
+                 subject: 'Important message',
+                 body: source.text)
+end
+
+# good (normal indent)
+def send_mail(source)
+  Mailer.deliver(
+    to: 'bob@example.com',
+    from: 'us@example.com',
+    subject: 'Important message',
+    body: source.text
+  )
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Birden fazla satır içeren dizi öğelerini hizalayın.</p>
+                      <pre><code class="language-ruby"># bad - single indent
+menu_item = %w[Spam Spam Spam Spam Spam Spam Spam Spam
+  Baked beans Spam Spam Spam Spam Spam]
+
+# good
+menu_item = %w[
+  Spam Spam Spam Spam Spam Spam Spam Spam
+  Baked beans Spam Spam Spam Spam Spam
+]
+
+# good
+menu_item =
+  %w[Spam Spam Spam Spam Spam Spam Spam Spam
+     Baked beans Spam Spam Spam Spam Spam]</code></pre>
+                    </li>
+                    <li>
+                      <p>Okunabilirliği artırmak için büyük sayısal literallere alt çizgi ekleyin.</p>
+                      <pre><code class="language-ruby"># bad - how many 0s are there?
+num = 1000000
+
+# good - much easier to parse for the human brain
+num = 1_000_000</code></pre>
+                    </li>
+                    <li>
+                      <p>Sayısal literal önekleri için küçük harfleri tercih edin. Sekizlik için <code>0o</code>, onaltılık için <code>0x</code> ve ikili için <code>0b</code>. Ondalık literaller için <code>0d</code> öneki kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+num = 01234
+num = 0O1234
+num = 0X12AB
+num = 0B10101
+num = 0D1234
+num = 0d1234
+
+# good - easier to separate digits from the prefix
+num = 0o1234
+num = 0x12AB
+num = 0b10101
+num = 1234</code></pre>
+                    </li>
+                    <li>
+                      <p>API dokümantasyonu için <a href="https://yardoc.org/" rel="nofollow" target="blank">YARD</a> ve kurallarını kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Satırları 80 karakterle sınırlayın.</p>
+                    </li>
+                    <li>
+                      <p>Satırların sonunda fazladan boşluk bırakmaktan kaçının.</p>
+                    </li>
+                    <li>
+                      <p>Her dosyayı yeni satır karakteriyle bitirin. Yeni satır karakteriyle bitmeyen satırlar gerçek satır sayılmaz ve dosyanın son satırı işlenirken sorun yaşanabilir.</p>
+                    </li>
+                    <li>
+                      <p>Blok yorumları kullanmayın. Boşluklardan önce gelemezler ve sıradan yorumlar kadar kolay farkedilmezler.</p>
+                      <pre><code class="language-ruby"># bad
+=begin
+comment line
+another comment line
+=end
+
+# good
+# comment line
+# another comment line</code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
