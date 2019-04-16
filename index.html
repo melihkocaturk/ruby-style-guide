@@ -113,13 +113,9 @@
 
                 <section>
                   <h2 class="section-title-2">Giriş</h2>
-
                   <p>Ruby geliştiricisi olarak bir şey beni her zaman rahatsız etti - Python geliştiricileri harika bir programlama stili referansına (PEP-8) sahipler ve Ruby kodlama stilini ve en iyi uygulamaları belgeleyen resmi bir rehberimiz olmadı. Ve stilin önemli olduğuna inanıyorum, ayrıca Ruby gibi büyük bir hacker topluluğu bu belgeyi üretebilecek kapasitede olmalı.</p>
-
                   <p>Bu rehber, şirketimizin Ruby kodlama yönergeleri olarak hayatına başladı. Bir noktada, yaptığım işin genel olarak Ruby topluluğunun üyeleri için ilginç olabileceğine ve dünyanın başka bir şirket içi rehbere ihtiyaç duymadığına karar verdim. Ancak dünya, Ruby programcılığına yönelik, topluluğun yürüttüğü ve topluluğun onayladığı uygulamalardan ve stil reçetelerinden kesinlikle yararlanabilir.</p>
-
                   <p>Rehberin başlangıcından beri, dünyanın her tarafındaki olağanüstü Ruby topluluğu üyelerinden çok fazla geri bildirim aldım. Tüm öneri ve destek için teşekkür ederiz! Birlikte, her Ruby geliştiricisi için bir kaynak sağlayabiliriz.</p>
-
                   <p>Bu arada, Rails ile ilgileniyorsanız tamamlayıcı <a href="#">Ruby on Rails Stil Rehberi</a>'ne göz atmak isteyebilirsiniz.</p>
                 </section>
 
@@ -143,7 +139,6 @@ end</code></pre>
                     </li>
                     <li>
                       <p>Unix tarzı satır sonları kullanın. (*BSD, Solaris, Linux, macOS kullanıcıları varsayılan olarak karşılanır, Windows kullanıcılarının daha dikkatli olmaları gerekir.)</p>
-                      
                       <p>Git kullanıyorsanız, projenizi Windows satır sonlarından korumak için aşağıdaki yapılandırma ayarını eklemek isteyebilirsiniz.</p>
                       <pre><code  class="language-bash">$ git config --global core.autocrlf true</code></pre>
                     </li>
@@ -596,7 +591,1010 @@ another comment line
                 <!-- kaynak kod düzeni -->
                 <section id="section-2">
                   <h2 class="section-title-2">Sözdizimi <a data-scroll href="#section-2" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+
+                  <ul>
+                    <li>
+                      <p><code>::</code> operatörünü yalnızca sabitlere (sınıflar ve modüller) ve kuruculara (<code>Array()</code> veya <code>Nokogiri::HTML()</code> gibi) başvurmak için kullanın. Yöntem çağrıları için kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+SomeClass::some_method
+some_object::some_method
+
+# good
+SomeClass.some_method
+some_object.some_method
+SomeModule::SomeClass::SOME_CONST
+SomeModule::SomeClass()</code></pre>
+                    </li>
+                    <li>
+                      <p>Sınıf yöntemlerini tanımlamak için <code>::</code> kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+class Foo
+  def self::some_method
+  end
+end
+
+# good
+class Foo
+  def self.some_method
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Fonksiyon parametre alacaksa <code>def</code> ile beraber parantez kullanın. Yöntem herhangi bir parametreyi kabul etmediğinde parantezleri atlayın.</p>
+                      <pre><code class="language-ruby"># bad
+def some_method()
+  # body omitted
+end
+
+# good
+def some_method
+  # body omitted
+end
+
+# bad
+def some_method_with_parameters param1, param2
+  # body omitted
+end
+
+# good
+def some_method_with_parameters(param1, param2)
+  # body omitted
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Özellikle ilk parametre açık bir parantezle başlıyorsa - <code>f((3 + 2) + 1)</code>'de olduğu gibi - yöntem parametrelerinin çevresinde parantez kullanın.
+</p>
+                      <pre><code class="language-ruby"># bad
+x = Math.sin y
+# good
+x = Math.sin(y)
+
+# bad
+array.delete e
+# good
+array.delete(e)
+
+# bad
+temperance = Person.new 'Temperance', 30
+# good
+temperance = Person.new('Temperance', 30)</code></pre>
+                      <p>Her zaman parantezleri atlayacağınız durumlar</p>
+                      <ul>
+                        <li>
+                          <p>Yöntem hiçbir parametre olmadan çağırıldığında:</p>
+                          <pre><code class="language-ruby"># bad
+Kernel.exit!()
+2.even?()
+fork()
+'test'.upcase()
+
+# good
+Kernel.exit!
+2.even?
+fork
+'test'.upcase</code></pre>
+                        </li>
+                        <li>
+                          <p>Dahili bir DSL’in parçası olan yöntemler (Örneğin, Rake, Rails, RSpec):</p>
+                          <pre><code class="language-ruby"># bad
+validates(:name, presence: true)
+# good
+validates :name, presence: true</code></pre>
+                        </li>
+                        <li>
+                          <p>Ruby'de "anahtar kelime" statüsüne sahip yöntemler:</p>
+                          <pre><code class="language-ruby">class Person
+  # bad
+  attr_reader(:name, :age)
+  # good
+  attr_reader :name, :age
+
+  # body omitted
+end</code></pre>
+                        </li>
+                      </ul>
+                      <p>Parantezleri atlayabileceğiniz durumlar</p>
+                      <ul>
+                        <li>
+                          <p>Ruby'de "anahtar kelime" statüsüne sahip, ancak bildirimde bulunmayan yöntemler:</p>
+                          <pre><code class="language-ruby"># good
+puts(temperance.age)
+system('ls')
+# also good
+puts temperance.age
+system 'ls'</code></pre>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <p>İsteğe bağlı parametreleri, parametre listesinin sonunda tanımlayın. Listenin önünde isteğe bağlı parametreleri olan yöntemleri çağırdığınızda, Ruby beklenmedik sonuçlar verebilir.</p>
+                      <pre><code class="language-ruby"># bad
+def some_method(a = 1, b = 2, c, d)
+  puts "#{a}, #{b}, #{c}, #{d}"
+end
+
+some_method('w', 'x') # => '1, 2, w, x'
+some_method('w', 'x', 'y') # => 'w, 2, x, y'
+some_method('w', 'x', 'y', 'z') # => 'w, x, y, z'
+
+# good
+def some_method(c, d, a = 1, b = 2)
+  puts "#{a}, #{b}, #{c}, #{d}"
+end
+
+some_method('w', 'x') # => '1, 2, w, x'
+some_method('w', 'x', 'y') # => 'y, 2, w, x'
+some_method('w', 'x', 'y', 'z') # => 'y, z, w, x'</code></pre>
+                    </li>
+                    <li>
+                      <p>Boolean parametreleri bir yönteme iletirken anahtar kelime parametrelerini kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+def some_method(bar = false)
+  puts bar
+end
+
+# bad - common hack before keyword args were introduced
+def some_method(options = {})
+  bar = options.fetch(:bar, false)
+  puts bar
+end
+
+# good
+def some_method(bar: false)
+  puts bar
+end
+
+some_method            # => false
+some_method(bar: true) # => true</code></pre>
+                    </li>
+                    <li>
+                      <p>İsteğe bağlı parametreler yerine anahtar kelime parametreleri tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+def some_method(a, b = 5, c = 1)
+  # body omitted
+end
+
+# good
+def some_method(a, b: 5, c: 1)
+  # body omitted
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Çırpı (hash) yerine anahtar kelime parametreleri kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+def some_method(options = {})
+  bar = options.fetch(:bar, false)
+  puts bar
+end
+
+# good
+def some_method(bar: false)
+  puts bar
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Değişkenleri tanımlamak için paralel atama kullanmaktan kaçının. Paralel atama, splat(*) operatörüyle birlikte kullanılan bir yöntem çağrısının dönüşü için veya değişken atamasını değiştirmek için kullanılabilir. Paralel atama, ayrı atamalar kadar rahat okunamaz.</p>
+                      <pre><code class="language-ruby"># bad
+a, b, c, d = 'foo', 'bar', 'baz', 'foobar'
+
+# good
+a = 'foo'
+b = 'bar'
+c = 'baz'
+d = 'foobar'
+
+# good - swapping variable assignment
+# Swapping variable assignment is a special case because it will allow you to
+# swap the values that are assigned to each variable.
+a = 'foo'
+b = 'bar'
+
+a, b = b, a
+puts a # => 'bar'
+puts b # => 'foo'
+
+# good - method return
+def multi_return
+  [1, 2]
+end
+
+first, second = multi_return
+
+# good - use with splat
+first, *list = [1, 2, 3, 4] # first => 1, list => [2, 3, 4]
+
+hello_array = *'Hello' # => ["Hello"]
+
+a = *(1..3) # => [1, 2, 3]</code></pre>
+                    </li>
+                    <li>
+                      <p>Tam olarak nedenini bilmiyorsanız, <code>for</code> kullanmayın. Çoğu zaman bunun yerine yineleyiciler kullanılmalıdır.</p>
+                      <pre><code class="language-ruby">arr = [1, 2, 3]
+
+# bad
+for elem in arr do
+  puts elem
+end
+
+# note that elem is accessible outside of the for loop
+elem # => 3
+
+# good
+arr.each { |elem| puts elem }
+
+# elem is not accessible outside each's block
+elem # => NameError: undefined local variable or method `elem'</code></pre>
+                    </li>
+                    <li>
+                      <p>Çok satırlı <code>if/unless</code> için <code>then</code> kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+if some_condition then
+  # body omitted
+end
+
+# good
+if some_condition
+  # body omitted
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Üçlü işleci <code>if/then/else/end</code> yapıları üzerinden kullanın. Daha yaygın ve tabii ki daha özlü.</p>
+                      <pre><code class="language-ruby"># bad
+result = if some_condition then something else something_else end
+
+# good
+result = some_condition ? something : something_else</code></pre>
+                    </li>
+                    <li>
+                      <p>Üçlü bir işleçte dal başına bir ifade kullanın. Bu aynı zamanda üçlü operatörlerin iç içe geçmemesi gerektiği anlamına gelir. Bu durumlarda <code>if/else</code> yapıları tercih edilir.</p>
+                      <pre><code class="language-ruby"># bad
+some_condition ? (nested_condition ? nested_something : nested_something_else) : something_else
+
+# good
+if some_condition
+  nested_condition ? nested_something : nested_something_else
+else
+  something_else
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>if x; ...</code> kullanmayın. Bunun yerine üçlü operatörü kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+result = if some_condition; something else something_else end
+
+# good
+result = some_condition ? something : something_else</code></pre>
+                    </li>
+                    <li>
+                      <p><code>if</code> ve <code>case</code> ifadelerinin sonuç döndüren ifadeler olduğu gerçeğinden faydalanın.</p>
+                      <pre><code class="language-ruby"># bad
+if condition
+  result = x
+else
+  result = y
+end
+
+# good
+result =
+  if condition
+    x
+  else
+    y
+  end</code></pre>
+                    </li>
+                    <li>
+                      <p>Tek satırlı durumlar için <code>when x then ...</code> kullanın. Alternatif sözdizimi <code>when x: ...</code> Ruby 1.9'dan itibaren kaldırılmıştır.</p>
+                    </li>
+                    <li>
+                      <p><code>when x; ...</code> kullanmayın. Önceki kurala bakınız.</p>
+                    </li>
+                    <li>
+                      <p><code>not</code> yerine <code>!</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad - parentheses are required because of op precedence
+x = (not something)
+
+# good
+x = !something</code></pre>
+                    </li>
+                    <li>
+                      <p><code>!!</code> kullanmaktan kaçının.</p>
+                      <p><code>!!</code> bir değeri boolean'a dönüştürür, ancak kontrol ifadesi koşulunda bu açık dönüşüme ihtiyacınız yoktur. <code>nil</code> kontrolü yapmak istiyorsanız, bunun yerine <code>nil?</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+x = 'test'
+# obscure nil check
+if !!x
+  # body omitted
+end
+
+# good
+x = 'test'
+if x
+  # body omitted
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>and</code> and <code>or</code> anahtar kelimelerini kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+# boolean expression
+ok = got_needed_arguments and arguments_are_valid
+
+# control flow
+document.save or raise("Failed to save document!")
+
+# good
+# boolean expression
+ok = got_needed_arguments && arguments_are_valid
+
+# control flow
+raise("Failed to save document!") unless document.save
+
+# ok
+# control flow
+document.save || raise("Failed to save document!")</code></pre>
+                    </li>
+                    <li>
+                      <p>Çok satırlı <code>?:</code> (Üçlü operatör) kullanmak yerine <code>if/unless</code> kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Tek satırlı bir gövdeye sahipseniz, <code>if/unless</code> değiştiricisini kullanın. Diğer bir iyi alternatif, kontrol akışının <code>&&/||</code> kullanılmasıdır.</p>
+                      <pre><code class="language-ruby"># bad
+if some_condition
+  do_something
+end
+
+# good
+do_something if some_condition
+
+# another good option
+some_condition && do_something</code></pre>
+                    </li>
+                    <li>
+                      <p>Çok satırlı bir bloğun sonunda <code>if/unless</code> kullanmaktan kaçının.</p>
+                      <pre><code class="language-ruby"># bad
+10.times do
+  # multi-line body omitted
+end if some_condition
+
+# good
+if some_condition
+  10.times do
+    # multi-line body omitted
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>İç içe <code>if/unless/while/until</code> kullanımından kaçının. Eğer uygunsa <code>&&/||</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+do_something if other_condition if some_condition
+
+# good
+do_something if some_condition && other_condition</code></pre>
+                    </li>
+                    <li>
+                      <p>Olumsuz koşullar için <code>if</code> yerine <code>unless</code> kullanın (veya kontrol akışı <code>||</code>).</p>
+                      <pre><code class="language-ruby"># bad
+do_something if !some_condition
+
+# bad
+do_something if not some_condition
+
+# good
+do_something unless some_condition
+
+# another good option
+some_condition || do_something</code></pre>
+                    </li>
+                    <li>
+                      <p><code>unless</code> ile birlikte <code>else</code> kullanmayın. Bunları pozitif durumu öne alarak tekrar yazın.</p>
+                      <pre><code class="language-ruby"># bad
+unless success?
+  puts 'failure'
+else
+  puts 'success'
+end
+
+# good
+if success?
+  puts 'success'
+else
+  puts 'failure'
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Kontrol ifadesinin koşulu etrafında parantez kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+if (x > 10)
+  # body omitted
+end
+
+# good
+if x > 10
+  # body omitted
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Çok satırlı <code>while/until</code> için <code>while/until condition do</code> kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+while x > 5 do
+  # body omitted
+end
+
+until x > 5 do
+  # body omitted
+end
+
+# good
+while x > 5
+  # body omitted
+end
+
+until x > 5
+  # body omitted
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Tek satırlı bir gövdeye sahip olduğunuzda <code>while/until</code> kullanımını değiştirin.</p>
+                      <pre><code class="language-ruby"># bad
+while some_condition
+  do_something
+end
+
+# good
+do_something while some_condition</code></pre>
+                    </li>
+                    <li>
+                      <p>Olumsuz koşullar için <code>while</code> yerine <code>until</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+do_something while !some_condition
+
+# good
+do_something until some_condition</code></pre>
+                    </li>
+                    <li>
+                      <p>Sonsuz bir döngüye ihtiyaç duyduğunuzda, <code>while/until</code> yerine <code>Kernel#loop</code> döngüsünü kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+while true
+  do_something
+end
+
+until false
+  do_something
+end
+
+# good
+loop do
+  do_something
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Döngü sonundaki testler için <code>begin/end/until</code> veya <code>begin/end/while</code> yerine <code>Kernel#loop</code> ile birlikte <code>break</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+begin
+  puts val
+  val += 1
+end while val < 0
+
+# good
+loop do
+  puts val
+  val += 1
+  break unless val < 0
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Hash parametreler için dıştaki parantezleri atlayın.</p>
+                      <pre><code class="language-ruby"># bad
+user.set({ name: 'John', age: 45, permissions: { read: true } })
+
+# good
+user.set(name: 'John', age: 45, permissions: { read: true })</code></pre>
+                    </li>
+                    <li>
+                      <p>Dahili bir DSL'in parçası olan yöntemler için iç ve dış parantezleri atlayın.</p>
+                      <pre><code class="language-ruby">class Person < ActiveRecord::Base
+  # bad
+  validates(:name, { presence: true, length: { within: 1..10 } })
+
+  # good
+  validates :name, presence: true, length: { within: 1..10 }
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Çağrılan yöntem bir bloğun tek işlemi olduğunda proc çağırma kısayolunu kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+names.map { |name| name.upcase }
+
+# good
+names.map(&:upcase)</code></pre>
+                    </li>
+                    <li>
+                      <p>Tek satırlı bloklar için <code>do...end</code> yerine <code>{...}</code> tercih edin. Çok satırlı bloklar için <code>{...}</code> kullanmaktan kaçının. Her zaman "kontrol akışı" ve "yöntem tanımları" için <code>do...end</code> kullanın (Örneğin, Rakefiles ve belirli DSL'lerde). Zincirleme yöntemleri kullanırken <code>do...end</code>'den kaçının.</p>
+                      <pre><code class="language-ruby">names = %w[Bozhidar Steve Sarah]
+
+# bad
+names.each do |name|
+  puts name
+end
+
+# good
+names.each { |name| puts name }
+
+# bad
+names.select do |name|
+  name.start_with?('S')
+end.map { |name| name.upcase }
+
+# good
+names.select { |name| name.start_with?('S') }.map(&:upcase)</code></pre>
+                    </li>
+                    <li>
+                      <p>Akış kontrölü için gerekli olmadığında <code>return</code> kullanmaktan kaçının.</p>
+                      <pre><code class="language-ruby"># bad
+def some_method(some_arr)
+  return some_arr.size
+end
+
+# good
+def some_method(some_arr)
+  some_arr.size
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Gerekli olmadığında <code>self</code> kullanmaktan kaçının.</p>
+                      <pre><code class="language-ruby"># bad
+def ready?
+  if self.last_reviewed_at > self.last_updated_at
+    self.worker.update(self.content, self.options)
+    self.status = :in_progress
+  end
+  self.status == :verified
+end
+
+# good
+def ready?
+  if last_reviewed_at > last_updated_at
+    worker.update(content, options)
+    self.status = :in_progress
+  end
+  status == :verified
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Sonuç olarak, ikisi de eşit olmadıkça iç kapsamda tanımlanan değişkenin, dış kapsamdaki değişkeni gölgelemesinden kaçının.</p>
+                      <pre><code class="language-ruby">class Foo
+  attr_accessor :options
+
+  # ok
+  def initialize(options)
+    self.options = options
+    # both options and self.options are equivalent here
+  end
+
+  # bad
+  def do_something(options = {})
+    unless options[:when] == :later
+      output(self.options[:message])
+    end
+  end
+
+  # good
+  def do_something(params = {})
+    unless params[:when] == :later
+      output(options[:message])
+    end
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Koşullu ifadelerde <code>=</code> (atama) dönüş değerini parantez içine almadan kullanmayın. Bu, koşullu ifade içinde güvenli atama olarak adlandırılan Rubyistler arasında oldukça popüler bir deyimdir.</p>
+                      <pre><code class="language-ruby"># bad (+ a warning)
+if v = array.grep(/foo/)
+  do_something(v)
+  # some code
+end
+
+# good (MRI would still complain, but RuboCop won't)
+if (v = array.grep(/foo/))
+  do_something(v)
+  # some code
+end
+
+# good
+v = array.grep(/foo/)
+if v
+  do_something(v)
+  # some code
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Uygulanabilir olduğunda kendiliğinden atamalı operatörleri kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+x = x + y
+x = x * y
+x = x**y
+x = x / y
+x = x || y
+x = x && y
+
+# good
+x += y
+x *= y
+x **= y
+x /= y
+x ||= y
+x &&= y</code></pre>
+                    </li>
+                    <li>
+                      <p>Henüz başlatılmamış değişkenleri başlatmak için <code>||=</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+name = name ? name : 'Bozhidar'
+
+# bad
+name = 'Bozhidar' unless name
+
+# good - set name to 'Bozhidar', only if it's nil or false
+name ||= 'Bozhidar'</code></pre>
+                    </li>
+                    <li>
+                      <p>Boolean değişkenleri başlatmak için <code>||=</code> kullanmayın. (Mevcut değer <code>false</code> ise, ne olacağını düşünün.)
+</p>
+                      <pre><code class="language-ruby"># bad - would set enabled to true even if it was false
+enabled ||= true
+
+# good
+enabled = true if enabled.nil?</code></pre>
+                    </li>
+                    <li>
+                      <p>Var olan veya olmayan değişkenleri önceden işlemek için <code>&&=</code> kullanın. <code>&&=</code> kullanmak, değeri yalnızca mevcutsa değiştirecek ve varlığını <code>if</code> ile kontrol etme ihtiyacını ortadan kaldıracaktır.</p>
+                      <pre><code class="language-ruby"># bad
+if something
+  something = something.downcase
+end
+
+# bad
+something = something ? something.downcase : nil
+
+# ok
+something = something.downcase if something
+
+# good
+something = something && something.downcase
+
+# better
+something &&= something.downcase</code></pre>
+                    </li>
+                    <li>
+                      <p>Durum eşitliği işlecinin <code>===</code> açıkça kullanılmasından kaçının. Adından da anlaşılacağı gibi <code>case</code> ifadeleri ile örtük olarak kullanılması amaçlanmıştır ve bunların dışında oldukça kafa karıştırıcı kodlar verir.</p>
+                      <pre><code class="language-ruby"># bad
+Array === something
+(1..100) === 7
+/something/ === some_string
+
+# good
+something.is_a?(Array)
+(1..100).include?(7)
+some_string.match?(/something/)</code></pre>
+                    </li>
+                    <li>
+                      <p><code>==</code> kullanabileceğiniz yerlerde <code>eql?</code> kullanmayın. <code>eql?</code> tarafından sağlanan daha katı karşılaştırma semantiğine pratikte nadiren ihtiyaç duyulur.</p>
+                      <pre><code class="language-ruby"># bad - eql? is the same as == for strings
+'ruby'.eql? some_str
+
+# good
+'ruby' == some_str
+1.0.eql? x # eql? makes sense here if want to differentiate between Integer and Float 1</code></pre>
+                    </li>
+                    <li>
+                      <p>Perl tarzı özel değişkenler kullanmaktan kaçının ($:, $; vb.).</p>
+                      <pre><code class="language-ruby"># bad
+$:.unshift File.dirname(__FILE__)
+
+# good
+require 'English'
+$LOAD_PATH.unshift File.dirname(__FILE__)</code></pre>
+                    </li>
+                    <li>
+                      <p>Yöntem adı ile açılış parantezi arasına boşluk koymayın.</p>
+                      <pre><code class="language-ruby"># bad
+f (3 + 2) + 1
+
+# good
+f(3 + 2) + 1</code></pre>
+                    </li>
+                    <li>
+                      <p>Ruby yorumlayıcısını daima <code>-w</code> seçeneğiyle çalıştırın, böylece yukarıdaki kurallardan herhangi birini unutursanız sizi uyaracaktır!</p>
+                    </li>
+                    <li>
+                      <p>Yöntemleri iç içe tanımlamayın, bunun yerine lambda kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+def foo(x)
+  def bar(y)
+    # body omitted
+  end
+
+  bar(x)
+end
+
+# good - the same as the previous, but no bar redefinition on every foo call
+def bar(y)
+  # body omitted
+end
+
+def foo(x)
+  bar(x)
+end
+
+# also good
+def foo(x)
+  bar = ->(y) { ... }
+  bar.call(x)
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Tek satırlı gövde blokları için yeni lambda literal sözdizimini kullanın. Çok satırlı bloklar için <code>lambda</code> yöntemini kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+l = lambda { |a, b| a + b }
+l.call(1, 2)
+
+# correct, but looks extremely awkward
+l = ->(a, b) do
+  tmp = a * 7
+  tmp * b / 50
+end
+
+# good
+l = ->(a, b) { a + b }
+l.call(1, 2)
+
+l = lambda do |a, b|
+  tmp = a * 7
+  tmp * b / 50
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Parametreli lambda tanımlarken parantezleri atlamayın.</p>
+                      <pre><code class="language-ruby"># bad
+l = ->x, y { something(x, y) }
+
+# good
+l = ->(x, y) { something(x, y) }</code></pre>
+                    </li>
+                    <li>
+                      <p>Parametresiz lambda tanımlarken parantezleri kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+l = ->() { something }
+
+# good
+l = -> { something }</code></pre>
+                    </li>
+                    <li>
+                      <p><code>Proc.new</code> yerine <code>proc</code>'u tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+p = Proc.new { |n| puts n }
+
+# good
+p = proc { |n| puts n }</code></pre>
+                    </li>
+                    <li>
+                      <p><code>proc[]</code> veya <code>proc.()</code> yerine <code>proc.call()</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad - looks similar to Enumeration access
+l = ->(v) { puts v }
+l[1]
+
+# also bad - uncommon syntax
+l = ->(v) { puts v }
+l.(1)
+
+# good
+l = ->(v) { puts v }
+l.call(1)</code></pre>
+                    </li>
+                    <li>
+                      <p><code>_</code> karakteri kullanılmayan blok parametreleri ve yerel değişkenlerin önekidir. Sadece <code>_</code> kullanmak da kabul edilebilir (biraz daha az açıklayıcı olmasına rağmen). Bu kural Ruby yorumlayıcısı ve RuboCop gibi araçlar tarafından tanınır ve kullanılmayan değişken uyarılarını bastırır.</p>
+                      <pre><code class="language-ruby"># bad
+result = hash.map { |k, v| v + 1 }
+
+def something(x)
+  unused_var, used_var = something_else(x)
+  # some code
+end
+
+# good
+result = hash.map { |_k, v| v + 1 }
+
+def something(x)
+  _unused_var, used_var = something_else(x)
+  # some code
+end
+
+# good
+result = hash.map { |_, v| v + 1 }
+
+def something(x)
+  _, used_var = something_else(x)
+  # some code
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>STDOUT/STDERR/STDIN</code> yerine <code>$stdout/$stderr/$stdin</code> kullanın. <code>STDOUT/STDERR/STDIN</code> sabittir ve Ruby'de sabitleri yeniden atanabilir (muhtemelen bazı akışı yeniden yönlendirmek için), bunu yaparsanız yorumlayıcı uyarısı alırsınız.</p>
+                    </li>
+                    <li>
+                      <p><code>$stderr.puts</code> yerine <code>warn</code> kullanın. Daha özlü ve net olmanın yanı sıra, gerekirse uyarıları bastırmanıza izin verir.</p>
+                    </li>
+                    <li>
+                      <p><code>String#%</code> yerine <code>sprintf</code> veya takma adı olan <code>format</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+'%d %d' % [20, 10]
+# => '20 10'
+
+# good
+sprintf('%d %d', 20, 10)
+# => '20 10'
+
+# good
+sprintf('%<first>d %<second>d', first: 20, second: 10)
+# => '20 10'
+
+format('%d %d', 20, 10)
+# => '20 10'
+
+# good
+format('%<first>d %<second>d', first: 20, second: 10)
+# => '20 10'</code></pre>
+                    </li>
+                    <li>
+                      <p><code>Array#*</code> yerine <code>Array#join</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+%w[one two three] * ', '
+# => 'one, two, three'
+
+# good
+%w[one two three].join(', ')
+# => 'one, two, three'</code></pre>
+                    </li>
+                    <li>
+                      <p>Bir değişkene dizi olarak değerlendirmek istediğinizde, ancak bu değişkenin dizi olduğundan emin olamadığınız durumlarda, açık <code>Array</code> denetimi veya <code>[*var]</code> yerine <code>Array()</code> kullanın. </p>
+                      <pre><code class="language-ruby"># bad
+paths = [paths] unless paths.is_a? Array
+paths.each { |path| do_something(path) }
+
+# bad (always creates a new Array instance)
+[*paths].each { |path| do_something(path) }
+
+# good (and a bit more readable)
+Array(paths).each { |path| do_something(path) }</code></pre>
+                    </li>
+                    <li>
+                      <p>Mümkün olduğunda karmaşık karşılaştırma mantığı yerine aralık <code>Comparable#between?</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+do_something if x >= 1000 && x <= 2000
+
+# good
+do_something if (1000..2000).include?(x)
+
+# good
+do_something if x.between?(1000, 2000)</code></pre>
+                    </li>
+                    <li>
+                      <p><code>==</code> ile yapılan belirli karşılaştırmalar için yordam yöntemlerini tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+if x % 2 == 0
+end
+
+if x % 2 == 1
+end
+
+if x == nil
+end
+
+# good
+if x.even?
+end
+
+if x.odd?
+end
+
+if x.nil?
+end
+
+if x.zero?
+end
+
+if x == 0
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Boolean değişkenler ile çalışmadığınız sürece, açıkça boş değişken kontrolü yapmayın.</p>
+                      <pre><code class="language-ruby"># bad
+do_something if !something.nil?
+do_something if something != nil
+
+# good
+do_something if something
+
+# good - dealing with a boolean
+def value_set?
+  !@some_boolean.nil?
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>BEGIN</code> bloklarını kullanmaktan kaçının.</p>
+                    </li>
+                    <li>
+                      <p><code>END</code> bloklarını kullanmayın. Bunun yerine <code>Kernel#at_exit</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+END { puts 'Goodbye!' }
+
+# good
+at_exit { puts 'Goodbye!' }</code></pre>
+                    </li>
+                    <li>
+                      <p>Flip-Flop operatörü kullanmaktan kaçının.</p>
+                    </li>
+                    <li>
+                      <p>Akış kontrolü için iç içe koşullu ifadeler kullanmaktan kaçının.</p>
+                      <p></p>
+                      <pre><code class="language-ruby"># bad
+def compute_thing(thing)
+  if thing[:foo]
+    update_with_bar(thing[:foo])
+    if thing[:foo][:bar]
+      partial_compute(thing)
+    else
+      re_compute(thing)
+    end
+  end
+end
+
+# good
+def compute_thing(thing)
+  return unless thing[:foo]
+  update_with_bar(thing[:foo])
+  return re_compute(thing) unless thing[:foo][:bar]
+  partial_compute(thing)
+end</code></pre>
+                      <p>Döngülerde, koşullu ifadeler yerine <code>next</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+[0, 1, 2, 3].each do |item|
+  if item > 1
+    puts item
+  end
+end
+
+# good
+[0, 1, 2, 3].each do |item|
+  next unless item > 1
+  puts item
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>collect</code> yerine <code>map</code>, <code>detect</code> yerine <code>find</code>, <code>find_all</code> yerine <code>select</code>, <code>inject</code> yerine <code>reduce</code>, <code>length</code> yerine <code>size</code> kullanmayı tercih edin. Takma adların kullanımı okunabilirliği arttırır. </p>
+                    </li>
+                    <li>
+                      <p><code>count</code> ifadesini <code>size</code> yerine kullanmayın. Dizi dışındaki nesnelerin boyutunu belirlemek için tüm koleksiyon yinelenir.</p>
+                      <pre><code class="language-ruby"># bad
+some_hash.count
+
+# good
+some_hash.size</code></pre>
+                    </li>
+                    <li>
+                      <p><code>map + flatten</code> yerine <code>flat_map</code> kullanın. Bu durum 2'den büyük derinliğe sahip diziler için geçerli değildir, yani <code>users.first.songs == ['a', ['b','c']]</code> ise, o zaman <code>flat_map</code> yerine <code>map + flatten</code> kullanın. <code>flat_map</code> diziyi ilk katmana göre düzleştirir, oysa <code>flatten</code> tamamen düzleştirir.</p>
+                      <pre><code class="language-ruby"># bad
+all_songs = users.map(&:songs).flatten.uniq
+
+# good
+all_songs = users.flat_map(&:songs).uniq</code></pre>
+                    </li>
+                    <li>
+                      <p><code>reverse.each</code> yerine <code>reverse_each</code> kullanmayı tercih edin çünkü <code>include Enumarable</code> içeren bazı sınıflar verimli bir uygulama sağlayacaktır. Bir sınıfın özel bir uygulama sağlamadığı en kötü durumda bile, <code>Enumerable</code>'dan devralınan genel uygulama en azından <code>reverse.each</code> kullanmak kadar verimli olacaktır.</p>
+                      <pre><code class="language-ruby"># bad
+array.reverse.each { ... }
+
+# good
+array.reverse_each { ... }</code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
