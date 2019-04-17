@@ -187,9 +187,9 @@
 
 
       // Smooth Scroll
-      $(function () {
-        var scroll = new SmoothScroll('[data-scroll]');
-      });
+      // $(function () {
+      //   var scroll = new SmoothScroll('[data-scroll]');
+      // });
 
 
       // Lavalamp
