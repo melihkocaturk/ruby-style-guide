@@ -116,7 +116,7 @@
                   <p>Bu arada, Rails ile ilgileniyorsanız tamamlayıcı <a href="#">Ruby on Rails Stil Rehberi</a>'ne göz atmak isteyebilirsiniz.</p>
                 </section>
 
-                <!-- kaynak kod düzeni -->
+                <!-- source code layout  -->
                 <section id="section-1">
                   <h2 class="section-title-2">Kaynak Kod Düzeni <a data-scroll href="#section-1" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -582,9 +582,9 @@ another comment line
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / source code layout -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- syntax -->
                 <section id="section-2">
                   <h2 class="section-title-2">Sözdizimi <a data-scroll href="#section-2" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -1591,9 +1591,9 @@ array.reverse_each { ... }</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / syntax -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- naming -->
                 <section id="section-3">
                   <h2 class="section-title-2">Adlandırma <a data-scroll href="#section-3" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -1767,9 +1767,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / naming -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- comments -->
                 <section id="section-4">
                   <h2 class="section-title-2">Yorumlar <a data-scroll href="#section-4" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <blockquote class="blockquote">
@@ -1927,9 +1927,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / comments -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- classes & modules -->
                 <section id="section-5">
                   <h2 class="section-title-2">Sınıflar ve Modüller <a data-scroll href="#section-5" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2343,36 +2343,182 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / classes & modules -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- exceptions -->
                 <section id="section-6">
                   <h2 class="section-title-2">İstisnalar <a data-scroll href="#section-6" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                  </ul>                </section>
-                <!-- / kaynak kod düzeni -->
+                      <p>İstisnalar için <code>fail</code> yerine <code>raise</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+fail SomeException, 'message'
 
-                <!-- kaynak kod düzeni -->
+# good
+raise SomeException, 'message'</code></pre>
+                    </li>
+                    <li>
+                      <p><code>RuntimeError</code> ifadesini açıkça belirtmeyin.</p>
+                      <pre><code class="language-ruby"># bad
+raise RuntimeError, 'message'
+
+# good - signals a RuntimeError by default
+raise 'message'</code></pre>
+                    </li>
+                    <li>
+                      <p><code>raise</code> için istisna örneği yerine, istisna sınıfı ve mesajını iki ayrı argüman olarak vermeyi tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+raise SomeException.new('message')
+# Note that there is no way to do `raise SomeException.new('message'), backtrace`.
+
+# good
+raise SomeException, 'message'
+# Consistent with `raise SomeException, 'message', backtrace`.</code></pre>
+                    </li>
+                    <li>
+                      <p><code>ensure</code> bloğundan geri dönüş yapmayın. <code>ensure</code> bloğu içindeki bir yöntemden dönerseniz, geri dönüş, ortaya atılan istisnalar karşısında öncelikli olacaktır ve yöntem hiçbir istisna ortaya çıkmamış gibi davranacaktır. Aslında, istisna (exception) sessizce fırlatılır.</p>
+                      <pre><code class="language-ruby"># bad
+def foo
+  raise
+ensure
+  return 'very bad idea'
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Mümkün olduğunda üstü kapalı başlangıç blokları kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+def foo
+  begin
+    # main logic goes here
+  rescue
+    # failure handling goes here
+  end
+end
+
+# good
+def foo
+  # main logic goes here
+rescue
+  # failure handling goes here
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>İstisnaları bastırmayın.</p>
+                      <pre><code class="language-ruby"># bad
+begin
+  # an exception occurs here
+rescue SomeError
+  # the rescue clause does absolutely nothing
+end
+
+# bad
+do_something rescue nil</code></pre>
+                    </li>
+                    <li>
+                      <p>Değiştirici formunda <code>rescue</code> kullanmaktan kaçının.</p>
+                      <pre><code class="language-ruby"># bad - this catches exceptions of StandardError class and its descendant classes
+read_file rescue handle_error($!)
+
+# good - this catches only the exceptions of Errno::ENOENT class and its descendant classes
+def foo
+  read_file
+rescue Errno::ENOENT => e
+  handle_error(e)
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Kontrol akışı için istisnalar kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+begin
+  n / d
+rescue ZeroDivisionError
+  puts 'Cannot divide by 0!'
+end
+
+# good
+if d.zero?
+  puts 'Cannot divide by 0!'
+else
+  n / d
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>Exception</code> sınıfını kurtarmaktan kaçının. Bu, sinyalleri hapseder ve süreçte <code>kill -9</code> gerektiren <code>exit</code> yapar.</p>
+                      <pre><code class="language-ruby"># bad
+begin
+  # calls to exit and kill signals will be caught (except kill -9)
+  exit
+rescue Exception
+  puts "you didn't really want to exit, right?"
+  # exception handling
+end
+
+# good
+begin
+  # a blind rescue rescues from StandardError, not Exception as many
+  # programmers assume.
+rescue => e
+  # exception handling
+end
+
+# also good
+begin
+  # an exception occurs here
+rescue StandardError => e
+  # exception handling
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Kurtarma zincirinin üstüne daha özel istisnalar koyun, aksi takdirde asla kurtarılamazlar.</p>
+                      <pre><code class="language-ruby"># bad
+begin
+  # some code
+rescue StandardError => e
+  # some handling
+rescue IOError => e
+  # some handling that will never be executed
+end
+
+# good
+begin
+  # some code
+rescue IOError => e
+  # some handling
+rescue StandardError => e
+  # some handling
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Programınız tarafından elde edilen dış kaynakları <code>ensure</code> bloğunda serbest bırakın.</p>
+                      <pre><code class="language-ruby">f = File.open('testfile')
+begin
+  # .. process
+rescue
+  # .. handle error
+ensure
+  f.close if f
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Mümkün olduğunda otomatik kaynak temizliği yapan yöntemleri kullanın.</p>
+                      <pre><code class="language-ruby"># bad - you need to close the file descriptor explicitly
+f = File.open('testfile')
+# some action on the file
+f.close
+
+# good - the file descriptor is closed automatically
+File.open('testfile') do |f|
+  # some action on the file
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Yeni istisna sınıfları tanımlamak yerine standart kütüphanedeki istisnaların kullanılmasını tercih edin.</p>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / exceptions -->
+
+                <!-- collections -->
                 <section id="section-7">
                   <h2 class="section-title-2">Koleksiyonlar <a data-scroll href="#section-7" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2398,9 +2544,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / collections -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- numbers -->
                 <section id="section-8">
                   <h2 class="section-title-2">Sayılar <a data-scroll href="#section-8" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2426,9 +2572,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / numbers -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- strings -->
                 <section id="section-9">
                   <h2 class="section-title-2">Dizeler <a data-scroll href="#section-9" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2454,9 +2600,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / strings -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- date & time -->
                 <section id="section-10">
                   <h2 class="section-title-2">Tarih ve Saat <a data-scroll href="#section-10" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2482,9 +2628,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / date & time -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- regular expressions -->
                 <section id="section-11">
                   <h2 class="section-title-2">Düzenli İfadeler <a data-scroll href="#section-11" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2510,9 +2656,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / regular expressions -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- percent literals -->
                 <section id="section-12">
                   <h2 class="section-title-2">Literaller <a data-scroll href="#section-12" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2538,9 +2684,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / percent literals -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- metaprogramming -->
                 <section id="section-13">
                   <h2 class="section-title-2">Meta Programlama <a data-scroll href="#section-13" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2566,9 +2712,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / metaprogramming -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- misc -->
                 <section id="section-14">
                   <h2 class="section-title-2">Genel <a data-scroll href="#section-14" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2594,9 +2740,9 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / misc -->
 
-                <!-- kaynak kod düzeni -->
+                <!-- tools -->
                 <section id="section-15">
                   <h2 class="section-title-2">Araçlar <a data-scroll href="#section-15" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
@@ -2622,7 +2768,7 @@ end</code></pre>
                     </li>
                   </ul>
                 </section>
-                <!-- / kaynak kod düzeni -->
+                <!-- / tools -->
 
               </article>
 
