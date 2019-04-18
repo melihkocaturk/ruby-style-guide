@@ -1932,77 +1932,695 @@ end</code></pre>
                 <!-- kaynak kod düzeni -->
                 <section id="section-5">
                   <h2 class="section-title-2">Sınıflar ve Modüller <a data-scroll href="#section-5" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p>Sınıf tanımlarınızda tutarlı bir yapı kullanın.</p>
+                      <pre><code class="language-ruby">class Person
+  # extend and include go first
+  extend SomeModule
+  include AnotherModule
+
+  # inner classes
+  CustomError = Class.new(StandardError)
+
+  # constants are next
+  SOME_CONSTANT = 20
+
+  # afterwards we have attribute macros
+  attr_reader :name
+
+  # followed by other macros (if any)
+  validates :name
+
+  # public class methods are next in line
+  def self.some_method
+  end
+
+  # initialization goes between class methods and other instance methods
+  def initialize
+  end
+
+  # followed by other public instance methods
+  def some_method
+  end
+
+  # protected and private methods are grouped near the end
+  protected
+
+  def some_protected_method
+  end
+
+  private
+
+  def some_private_method
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Çoklu Mixin'leri ayrı ifadelere bölün.</p>
+                      <pre><code class="language-ruby"># bad
+class Person
+  include Foo, Bar
+end
+
+# good
+class Person
+  # multiple mixins go in separate statements
+  include Foo
+  include Bar
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Çok satırlı sınıfları sınıf içine yerleştirmeyin. Bu gibi içe içe geçmiş sınıfların her birini, kendi dosyalarında, ana sınıf gibi adlandırılmış klasörde bulundurmaya çalışın.</p>
+                      <pre><code class="language-ruby"># bad
+
+# foo.rb
+class Foo
+  class Bar
+    # 30 methods inside
+  end
+
+  class Car
+    # 20 methods inside
+  end
+
+  # 30 methods inside
+end
+
+# good
+
+# foo.rb
+class Foo
+  # 30 methods inside
+end
+
+# foo/bar.rb
+class Foo
+  class Bar
+    # 30 methods inside
+  end
+end
+
+# foo/car.rb
+class Foo
+  class Car
+    # 20 methods inside
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Ad alanlı sınıfları ve modülleri açıkça iç içe koyarak tanımlayın (ve yeniden açın). Kapsam çözünürlüğü operatörünü kullanmak, şaşırtıcı aramalara neden olabilir. Bu durum, modülün tanımlandığı yere bağlıdır.</p>
+                      <pre><code class="language-ruby">module Utilities
+  class Queue
+  end
+end
+
+# bad
+class Utilities::Store
+  Module.nesting # => [Utilities::Store]
+
+  def initialize
+    # Refers to the top level ::Queue class because Utilities isn't in the
+    # current nesting chain.
+    @queue = Queue.new
+  end
+end
+
+# good
+module Utilities
+  class WaitingList
+    Module.nesting # => [Utilities::WaitingList, Utilities]
+
+    def initialize
+      @queue = Queue.new # Refers to Utilities::Queue
+    end
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Modülleri yalnızca sınıf yöntemlerine sahip sınıflara tercih edin. Sınıflar yalnızca onlardan örnekler oluşturmanın mantıklı olduğu durumlarda kullanılmalıdır.</p>
+                      <pre><code class="language-ruby">class SomeClass
+  def self.some_method
+    # body omitted
+  end
+
+  def self.some_other_method
+    # body omitted
+  end
+end
+
+# good
+module SomeModule
+  module_function
+
+  def some_method
+    # body omitted
+  end
+
+  def some_other_method
+    # body omitted
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Bir modülün örnek yöntemlerini sınıf yöntemlerine dönüştürmek istediğinizde, <code>extend self</code> yerine <code>module_function</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+module Utilities
+  extend self
+
+  def parse_something(string)
+    # do stuff here
+  end
+
+  def other_utility_method(number, string)
+    # do some more stuff
+  end
+end
+
+# good
+module Utilities
+  module_function
+
+  def parse_something(string)
+    # do stuff here
+  end
+
+  def other_utility_method(number, string)
+    # do some more stuff
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Sınıf hiyerarşileri tasarlanırken, <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle" target="blank" rel="nofollow">Liskov Değiştirme Prensibi</a>'ne uyduklarından emin olun.</p>
+                    </li>
+                    <li>
+                      <p>Sınıflarınızı olabildiğince <a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)" target="blank" rel="nofollow">SOLID</a> yapmaya çalışın.</p>
+                    </li>
+                    <li>
+                      <p>Etki alanı nesnelerini temsil eden sınıflar için her zaman uygun bir <code>to_s</code> yöntemi sağlayın.</p>
+                      <pre><code class="language-ruby">class Person
+  attr_reader :first_name, :last_name
+
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+  end
+
+  def to_s
+    "#{first_name} #{last_name}"
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Önemsiz erişimcileri tanımlamak için <code>attr</code> işlev ailesini kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+class Person
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+  end
+
+  def first_name
+    @first_name
+  end
+
+  def last_name
+    @last_name
+  end
+end
+
+# good
+class Person
+  attr_reader :first_name, :last_name
+
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Erişimciler için, <code>get_</code> ve <code>set_</code> ile yöntem adlarını öneklemekten kaçının. Okumak için öznitelik adlarını ve yazmak için <code>attr_name =</code> kullanmak bir Ruby kuralıdır.</p>
+                      <pre><code class="language-ruby"># bad
+class Person
+  def get_name
+    "#{@first_name} #{@last_name}"
+  end
+
+  def set_name(name)
+    @first_name, @last_name = name.split(' ')
+  end
+end
+
+# good
+class Person
+  def name
+    "#{@first_name} #{@last_name}"
+  end
+
+  def name=(name)
+    @first_name, @last_name = name.split(' ')
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>attr</code> kullanmaktan kaçının. Bunun yerine <code>attr_reader</code> ve <code>attr_accessor</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad - creates a single attribute accessor (deprecated in Ruby 1.9)
+attr :something, true
+attr :one, :two, :three # behaves as attr_reader
+
+# good
+attr_accessor :something
+attr_reader :one, :two, :three</code></pre>
+                    </li>
+                    <li>
+                      <p>Önemsiz erişimcileri, kurucuları ve karşılaştırma operatörlerini sizin için tanımlayan <code>Struct.new</code>'i kullanmayı düşünün.</p>
+                      <pre><code class="language-ruby"># good
+class Person
+  attr_accessor :first_name, :last_name
+
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+  end
+end
+
+# better
+Person = Struct.new(:first_name, :last_name) do
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>Struct.new</code> tarafından başlatılan bir örneği genişletmeyin. Genişletmek gereksiz bir sınıf düzeyi sunar ve dosya birden çok kez istenirse garip hatalar ortaya çıkartabilir.</p>
+                      <pre><code class="language-ruby"># bad
+class Person < Struct.new(:first_name, :last_name)
+end
+
+# good
+Person = Struct.new(:first_name, :last_name)</code></pre>
+                    </li>
+                    <li>
+                      <p>Kalıtım yerine <a href="https://en.wikipedia.org/wiki/Duck_typing" target="blank" rel="nofollow">duck-typing</a> tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+class Animal
+  # abstract method
+  def speak
+  end
+end
+
+# extend superclass
+class Duck < Animal
+  def speak
+    puts 'Quack! Quack'
+  end
+end
+
+# extend superclass
+class Dog < Animal
+  def speak
+    puts 'Bau! Bau!'
+  end
+end
+
+# good
+class Duck
+  def speak
+    puts 'Quack! Quack'
+  end
+end
+
+class Dog
+  def speak
+    puts 'Bau! Bau!'
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Kalıtımdaki "kötü" davranışlarından dolayı sınıf (<code>@@</code>) değişkenlerinin kullanılmasından kaçının.</p>
+                      <pre><code class="language-ruby">class Parent
+  @@class_var = 'parent'
+
+  def self.print_class_var
+    puts @@class_var
+  end
+end
+
+class Child < Parent
+  @@class_var = 'child'
+end
+
+Parent.print_class_var # => will print 'child'</code></pre>
+                      <p>Görebileceğiniz gibi, sınıf hiyerarşisindeki tüm sınıflar aslında bir sınıf değişkenini paylaşır. Örnek değişkenleri, genellikle sınıf değişkenleri yerine tercih edilmelidir.</p>
+                    </li>
+                    <li>
+                      <p>Amaçlanan kullanımlarına göre yöntemlere (<code>private, protected</code>) uygun görünürlük seviyeleri atayın. Her şeyi herkese <code>public</code> bırakmayın (bu varsayılandır). Ne de olsa şimdi Ruby'de kodluyoruz, Python'da değil.</p>
+                    </li>
+                    <li>
+                      <p><code>public</code>, <code>protected</code> ve <code>private</code> metodlar uygulandıkları metod tanımları kadar girintili olmalıdır. Aşağıdaki tüm yöntemlere uygulandığını vurgulamak için görünürlük değiştiricinin üzerinde ve altında boş bir satır bırakın.</p>
+                      <pre><code class="language-ruby">class SomeClass
+  def public_method
+    # some code
+  end
+
+  private
+
+  def private_method
+    # some code
+  end
+
+  def another_private_method
+    # some code
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Sınıf yöntemlerini tanımlamak için <code>def self.method</code> kullanın. Bu, sınıf adı tekrarlanmadığından kodun yeniden yapılandırılmasını kolaylaştırır.</p>
+                      <pre><code class="language-ruby">class TestClass
+  # bad
+  def TestClass.some_method
+    # body omitted
+  end
+
+  # good
+  def self.some_other_method
+    # body omitted
+  end
+
+  # Also possible and convenient when you
+  # have to define many class methods.
+  class << self
+    def first_method
+      # body omitted
+    end
+
+    def second_method_etc
+      # body omitted
+    end
+  end
+end</code></pre>
+                    </li>
+                  </ul>
+                  <h3 class="h4">Kurucular</h3>
+                  <ul>
+                    <li>
+                      <p>Belirli bir sınıfın örneklerini oluşturmak için ek makul yollar sağlayan factory metodlarını kullanmayı düşünün.</p>
+                      <pre><code class="language-ruby">class Person
+  def self.create(options_hash)
+    # body omitted
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Yapıcılarda, örnek değişkenleri için gereksiz yere <code>||=</code> kullanmaktan kaçının. Düz atamayı tercih edin. Ruby'de, örnek değişkenleri (<code>@</code> ile başlayan) bir değer atanana kadar <code>nil</code>'dir.</p>
+                      <pre><code class="language-ruby"># bad
+def initialize
+  @x ||= 1
+end
+
+# good
+def initialize
+  @x = 1
+end</code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-6">
                   <h2 class="section-title-2">İstisnalar <a data-scroll href="#section-6" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
-                </section>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>                </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-7">
                   <h2 class="section-title-2">Koleksiyonlar <a data-scroll href="#section-7" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-8">
                   <h2 class="section-title-2">Sayılar <a data-scroll href="#section-8" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-9">
                   <h2 class="section-title-2">Dizeler <a data-scroll href="#section-9" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-10">
                   <h2 class="section-title-2">Tarih ve Saat <a data-scroll href="#section-10" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-11">
                   <h2 class="section-title-2">Düzenli İfadeler <a data-scroll href="#section-11" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-12">
                   <h2 class="section-title-2">Literaller <a data-scroll href="#section-12" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-13">
                   <h2 class="section-title-2">Meta Programlama <a data-scroll href="#section-13" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-14">
                   <h2 class="section-title-2">Genel <a data-scroll href="#section-14" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
                 <!-- kaynak kod düzeni -->
                 <section id="section-15">
                   <h2 class="section-title-2">Araçlar <a data-scroll href="#section-15" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
