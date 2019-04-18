@@ -119,7 +119,6 @@
                 <!-- kaynak kod düzeni -->
                 <section id="section-1">
                   <h2 class="section-title-2">Kaynak Kod Düzeni <a data-scroll href="#section-1" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-
                   <ul>
                     <li><p>Kaynak dosya kodlaması olarak UTF-8 kullanın.</p></li>
                     <li>
@@ -588,7 +587,6 @@ another comment line
                 <!-- kaynak kod düzeni -->
                 <section id="section-2">
                   <h2 class="section-title-2">Sözdizimi <a data-scroll href="#section-2" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-
                   <ul>
                     <li>
                       <p><code>::</code> operatörünü yalnızca sabitlere (sınıflar ve modüller) ve kuruculara (<code>Array()</code> veya <code>Nokogiri::HTML()</code> gibi) başvurmak için kullanın. Yöntem çağrıları için kullanmayın.</p>
@@ -1598,7 +1596,6 @@ array.reverse_each { ... }</code></pre>
                 <!-- kaynak kod düzeni -->
                 <section id="section-3">
                   <h2 class="section-title-2">Adlandırma <a data-scroll href="#section-3" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-
                   <ul>
                     <li>
                       <p>İngilizce'deki ad tanımlayıcıları.</p>
@@ -1775,7 +1772,160 @@ end</code></pre>
                 <!-- kaynak kod düzeni -->
                 <section id="section-4">
                   <h2 class="section-title-2">Yorumlar <a data-scroll href="#section-4" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <p>...</p>
+                  <blockquote class="blockquote">
+                    <p class="mb-1">İyi kod, kendi en iyi dökümantasyonudur. Bir yorum eklemek üzeresiniz, kendinize şu soruyu sorun: "Bu yoruma gerek kalmaması için kodu nasıl geliştirebilirim?" Kodu geliştirin ve daha net hale getirmek için belgeleyin.</p>
+                    <footer class="blockquote-footer"><cite title="Source Title">Steve McConnell</cite></footer>
+                  </blockquote>
+                  <ul>
+                    <li>
+                      <p>Kendi kendini belgeleyen kod yazın ve bu bölümün geri kalanını yok sayın. Ciddi anlamda!</p>
+                    </li>
+                    <li>
+                      <p>Kendi kendini belgeleyen kod yazamadığınız durumlarda, kodun arkasındaki mantığı açıklayan bir yorum ekleyin.</p>
+                      <pre><code class="language-ruby"># bad
+
+x = BuggyClass.something.dup
+
+def compute_dependency_graph
+  ...30 lines of recursive graph merging...
+end
+
+# good
+
+# BuggyClass returns an internal object, so we have to dup it to modify it.
+x = BuggyClass.something.dup
+
+# This is algorithm 6.4(a) from Worf & Yar's _Amazing Graph Algorithms_ (2243).
+def compute_dependency_graph
+  ...30 lines of recursive graph merging...
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Yorumları İngilizce yazın.</p>
+                    </li>
+                    <li>
+                      <p>Yorumun başındaki <code>#</code> karakteri ile yorum metni arasında bir boşluk kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Bir kelimeden daha uzun yorumlara büyük harfle başlanır ve noktalama işaretleri kullanılır.</p>
+                    </li>
+                    <li>
+                      <p>Gereksiz yorumlardan kaçının.</p>
+                      <pre><code class="language-ruby"># bad
+counter += 1 # Increments counter by one.</code></pre>
+                    </li>
+                    <li>
+                      <p>Mevcut yorumları güncel tutun. Eski bir yorum hiç yorum yapmamaktan daha kötüdür.</p>
+                    </li>
+                    <li>
+                      <p>Kötü kodu açıklamak için yorum yazmaktan kaçının. Kendini açıklayıcı hale getirmek için kodu tekrar gözden geçirin.</p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                  </ul>
+                  <blockquote class="blockquote">
+                    <p class="mb-1">İyi kod iyi bir şakaya benzer: açıklamaya gerek yoktur.</p>
+                    <footer class="blockquote-footer"><cite title="Source Title">Russ Olsen</cite></footer>
+                  </blockquote>
+                  <h3 class="h4">Yorum Dipnotları</h3>
+                  <ul>
+                    <li>
+                      <p>Ek açıklamalar genellikle ilgili kodun hemen üstündeki satıra yazılmalıdır.</p>
+                    </li>
+                    <li>
+                      <p>Ek açıklama anahtar sözcüğünü iki nokta üst üste ve boşluk, ardından sorunu açıklayan bir not izler.</p>
+                    </li>
+                    <li>
+                      <p>Sorunu tanımlamak için birden fazla satır gerekiyorsa, sonraki satırlar <code>#</code>'dan sonra üç boşluk girintili olmalıdır.</p>
+                      <pre><code class="language-ruby">def bar
+  # FIXME: This has crashed occasionally since v3.2.1. It may
+  #   be related to the BarBazUtil upgrade.
+  baz(:quux)
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Sorunun çok açık olduğu durumlarda, herhangi bir açıklamanın gereksiz olması durumunda, ek açıklamalar not olmadan ilgili satırın sonuna bırakılabilir. Bu kullanım kural değil istisna olmalıdır.</p>
+                      <pre><code class="language-ruby">def bar
+  sleep 100 # OPTIMIZE
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Daha sonraki bir tarihte eklenmesi gereken eksik özellikleri veya işlevleri not etmek için <code>TODO</code> kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Düzeltilmesi gereken bozuk kodu not etmek için <code>FIXME</code> kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Performans sorunlarına neden olabilecek yavaş veya verimsiz kodu not etmek için <code>OPTIMIZE</code> kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Şüpheli kodlama uygulamalarının kullanıldığı ve yeniden incelenmesi gereken yerlerde <code>HACK</code> kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Amaçlandığı şekilde çalıştığını doğrulamak için bakılması gereken herhangi bir şeyi <code>REVIEW</code> kullanarak not edin.</p>
+                    </li>
+                    <li>
+                      <p>Uygun görmeniz durumunda diğer özel açıklama anahtar kelimelerini kullanın, ancak bunları projenizin <code>README</code> veya benzeri dökümanlarında belgelendiğinden emin olun.</p>
+                    </li>
+                  </ul>
+                  <h3 class="h4">Sihirli Yorumlar</h3>
+                  <ul>
+                    <li>
+                      <p>Sihirli yorumları, dosyadaki tüm kod ve yorumların üstüne yerleştirin.</p>
+                      <pre><code class="language-ruby"># bad
+# Some documentation about Person
+
+# frozen_string_literal: true
+class Person
+end
+
+# good
+# frozen_string_literal: true
+
+# Some documentation about Person
+class Person
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Bir dosyada mevcut olduğunda, sihirli yorumları shebang'ların altına yerleştirin.</p>
+                      <pre><code class="language-ruby"># bad
+# frozen_string_literal: true
+#!/usr/bin/env ruby
+
+App.parse(ARGV)
+
+# good
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+App.parse(ARGV)</code></pre>
+                    </li>
+                    <li>
+                      <p>Birden fazlasına ihtiyacınız olursa her satıra bir sihirli yorum kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+# -*- frozen_string_literal: true; encoding: ascii-8bit -*-
+
+# good
+# frozen_string_literal: true
+# encoding: ascii-8bit</code></pre>
+                    </li>
+                    <li>
+                      <p>Sihirli yorumları koddan ve yorumlardan boş bir satır ile ayırın.</p>
+                      <pre><code class="language-ruby"># bad
+# frozen_string_literal: true
+# Some documentation for Person
+class Person
+  # Some code
+end
+
+# good
+# frozen_string_literal: true
+
+# Some documentation for Person
+class Person
+  # Some code
+end</code></pre>
+                    </li>
+                  </ul>
                 </section>
                 <!-- / kaynak kod düzeni -->
 
