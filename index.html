@@ -2523,24 +2523,139 @@ end</code></pre>
                   <h2 class="section-title-2">Koleksiyonlar <a data-scroll href="#section-7" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Literal dizi ve çırpı (hash) oluşturma gösterimini tercih edin (parametreleri kuruculara iletmeniz gerekmiyorsa).</p>
+                      <pre><code class="language-ruby"># bad
+arr = Array.new
+hash = Hash.new
+
+# good
+arr = []
+arr = Array.new(10)
+hash = {}
+hash = Hash.new(0)</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Bir kelime dizisine (boş olmayan ve boşluk içermeyen) ihtiyacınız olduğunda, literal dizi sözdizimi yerine <code>%w</code> tercih edin. Bu kuralı yalnızca iki veya daha fazla öğeli dizilere uygulayın.</p>
+                      <pre><code class="language-ruby"># bad
+STATES = ['draft', 'open', 'closed']
+
+# good
+STATES = %w[draft open closed]</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Bir sembol dizisine ihtiyaç duyduğunuzda, literal dizi sözdizimi yerine <code>%i</code> tercih edin. Bu kuralı yalnızca iki veya daha fazla öğeli dizilere uygulayın.</p>
+                      <pre><code class="language-ruby"># bad
+STATES = [:draft, :open, :closed]
+
+# good
+STATES = %i[draft open closed]</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p><code>Array</code> veya <code>Hash</code> literallerin son öğesinden sonra virgül kullanmaktan kaçının.</p>
+                      <pre><code class="language-ruby"># bad - easier to move/add/remove items, but still not preferred
+VALUES = [
+           1001,
+           2020,
+           3333,
+         ]
+
+# bad
+VALUES = [1001, 2020, 3333, ]
+
+# good
+VALUES = [1001, 2020, 3333]</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Dizilerde çok büyük boşluklar oluşturmaktan kaçının.</p>
+                      <pre><code class="language-ruby">arr = []
+arr[100] = 1 # now you have an array with lots of nils</code></pre>
+                    </li>
+                    <li>
+                      <p>Bir dizinin ilk veya son elemanına erişirken, <code>[0]</code> veya <code>[-1]</code> yerine <code>first</code> veya <code>last</code> kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Benzersiz öğelerle çalışırken <code>Array</code> yerine <code>Set</code> kullanın. <code>Set</code>, benzeri olmayan sıralanmamış değerler topluluğu oluşturur. Bu, <code>Array</code>'in' sezgisel operasyonlar arası olanaklarından ve <code>Hash</code>'in hızlı aramasından oluşan bir melezdir.</p>
+                    </li>
+                    <li>
+                      <p>Çırpı anahtarları olarak sembolleri tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+hash = { 'one' => 1, 'two' => 2, 'three' => 3 }
+
+# good
+hash = { one: 1, two: 2, three: 3 }</code></pre>
+                    </li>
+                    <li>
+                      <p>Değişken nesneleri çırpı anahtarı olarak kullanmaktan kaçının.</p>
+                    </li>
+                    <li>
+                      <p>Çırpı anahtarlarınız sembol olduğunda Ruby 1.9 literal sözdizimini kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+hash = { :one => 1, :two => 2, :three => 3 }
+
+# good
+hash = { one: 1, two: 2, three: 3 }</code></pre>
+                    </li>
+                    <li>
+                      <p>Çırpı sözdizimlerini birbirine karıştırmayın. Sembol olmayan anahtarlara sahip olduğunuzda roket sözdizimine sadık kalırsınız.</p>
+                      <pre><code class="language-ruby"># bad
+{ a: 1, 'b' => 2 }
+
+# good
+{ :a => 1, 'b' => 2 }</code></pre>
+                    </li>
+                    <li>
+                      <p><code>Hash#has_key?</code> yerine <code>Hash#key?</code> ve <code>Hash#has_value?</code> yerine <code>Hash#value?</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+hash.has_key?(:test)
+hash.has_value?(value)
+
+# good
+hash.key?(:test)
+hash.value?(value)</code></pre>
+                    </li>
+                    <li>
+                      <p><code>Hash#keys.each</code> yerine <code>Hash#each_key</code> ve <code>Hash#values.each</code> yerine <code>Hash#each_value</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+hash.keys.each { |k| p k }
+hash.values.each { |v| p v }
+hash.each { |k, _v| p k }
+hash.each { |_k, v| p v }
+
+# good
+hash.each_key { |k| p k }
+hash.each_value { |v| p v }</code></pre>
+                    </li>
+                    <li>
+                      <p>Mevcut olması gereken çırpı anahtarlarıyla çalışırken <code>Hash#fetch</code> kullanın.</p>
+                      <pre><code class="language-ruby">heroes = { batman: 'Bruce Wayne', superman: 'Clark Kent' }
+# bad - if we make a mistake we might not spot it right away
+heroes[:batman] # => 'Bruce Wayne'
+heroes[:supermann] # => nil
+
+# good - fetch raises a KeyError making the problem obvious
+heroes.fetch(:supermann)</code></pre>
+                    </li>
+                    <li>
+                      <p>Özel mantık yerine <code>Hash#fetch</code> ile varsayılan değer kullanın.</p>
+                      <pre><code class="language-ruby">batman = { name: 'Bruce Wayne', is_evil: false }
+
+# bad - if we just use || operator with falsy value we won't get the expected result
+batman[:is_evil] || true # => true
+
+# good - fetch works correctly with falsy values
+batman.fetch(:is_evil, true) # => false</code></pre>
+                    </li>
+                    <li>
+                      <p>Bir çırpıdan birbirini izleyen birkaç değer almanız gerektiğinde <code>Hash#values_at</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+email = data['email']
+username = data['nickname']
+
+# good
+email, username = data.values_at('email', 'nickname')</code></pre>
+                    </li>
+                    <li>
+                      <p>Ruby 1.9'dan itibaren çırpıların sıralı olduğuna güvenebilirsiniz.</p>
                     </li>
                   </ul>
                 </section>
@@ -2746,6 +2861,18 @@ end</code></pre>
                 <section id="section-15">
                   <h2 class="section-title-2">Araçlar <a data-scroll href="#section-15" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
+                    <li>
+                      <p></p>
+                      <pre><code class="language-ruby"></code></pre>
+                    </li>
                     <li>
                       <p></p>
                       <pre><code class="language-ruby"></code></pre>
