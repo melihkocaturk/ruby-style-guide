@@ -3046,24 +3046,57 @@ u2.__send__ ...</code></pre>
                   <h2 class="section-title-2">Genel <a data-scroll href="#section-14" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p><code>ruby -w</code> ile güvenli kod yazın.</p>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>İsteğe bağlı parametre olarak çırpı kullanmaktan kaçının. (Nesne başlatıcıları bu kuralın istisnalarıdır).</p>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>10 satırdan uzun kodlardan kaçının. İdeal olarak, çoğu yöntem 5 satırdan daha kısa olacaktır.</p>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Üç veya dört parametreden daha uzun parametre listelerinden kaçının.</p>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Eğer gerçekten "global" yöntemlere ihtiyacınız varsa, bunları Kernel'e ekleyin ve kişiselleştirin.</p>
+                    </li>
+                    <li>
+                      <p>Global değişkenler yerine modül örnek değişkenlerini kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+$foo_bar = 1
+
+# good
+module Foo
+  class << self
+    attr_accessor :bar
+  end
+end
+
+Foo.bar = 1</code></pre>
+                    </li>
+                    <li>
+                      <p>Karmaşık komut satırı seçeneklerini ayrıştırmak için <code>OptionParser</code> ve önemsiz komut satırı seçenekleri için <code>ruby -s</code> komutunu kullanın.</p>
+                    </li>
+                    <li>
+                      <p>İşlevsel bir şekilde kodlayın, mantıklı olduğunda mutasyondan kaçının.</p>
+                      <pre><code class="language-ruby">a = []; [1, 2, 3].each { |i| a << i * 2 } # bad
+a = [1, 2, 3].map { |i| i * 2 } # good
+
+a = {}; [1, 2, 3].each { |i| a[i] = i * 17 } # bad
+a = [1, 2, 3].reduce({}) { |h, i| h[i] = i * 17; h } # good
+a = [1, 2, 3].each_with_object({}) { |i, h| h[i] = i * 17 } # good</code></pre>
+                    </li>
+                    <li>
+                      <p>Yöntemin amacı bu olmadığı sürece parametreleri mutasyona uğratmayın.</p>
+                    </li>
+                    <li>
+                      <p>Üç seviyeden fazla bloğu iç içe geçirmekten kaçının.</p>
+                    </li>
+                    <li>
+                      <p>Tutarlı olun. İdeal bir dünyada, bu rehberdeki prensiplere uyun.</p>
+                    </li>
+                    <li>
+                      <p>Sağduyunuzu kullanın.</p>
                     </li>
                   </ul>
                 </section>
@@ -3072,40 +3105,11 @@ u2.__send__ ...</code></pre>
                 <!-- tools -->
                 <section id="section-15">
                   <h2 class="section-title-2">Araçlar <a data-scroll href="#section-15" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
-                  <ul>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                  </ul>
+                  <p>Ruby kodunu bu kılavuza göre otomatik olarak kontrol etmenize yardımcı olacak bazı araçlar.</p>
+                  <h3 class="h4">RuboCop</h3>
+                  <p><a href="https://github.com/rubocop-hq/rubocop" target="blank" rel="nofollow">RuboCop</a>, bu stil rehberine dayanan Ruby statik kod analizörü ve biçimlendiricisidir.</p>
+                  <h3 class="h4">RubyMine</h3>
+                  <p><a href="https://www.jetbrains.com/ruby/" target="blank" rel="nofollow">RubyMine</a>'nın kod kontrolü kısmen bu stil rehberine dayanmaktadır.</p>
                 </section>
                 <!-- / tools -->
 
