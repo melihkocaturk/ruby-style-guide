@@ -2666,24 +2666,23 @@ email, username = data.values_at('email', 'nickname')</code></pre>
                   <h2 class="section-title-2">Sayılar <a data-scroll href="#section-8" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Bir tamsayının türünü kontrol etmek için <code>Integer</code> kullanın. <code>Fixnum</code> platforma bağlı olduğundan, 32 bit ve 64 bit makinelerde farklı sonuçlar verecektir.</p>
+                      <pre><code class="language-ruby">timestamp = Time.now.to_i
+
+# bad
+timestamp.is_a? Fixnum
+timestamp.is_a? Bignum
+
+# good
+timestamp.is_a? Integer</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Rastgele sayılar üretirken sayı aralığı kullanmayı tercih edin. Bir zar atışını taklit ettiğinizi düşünün:</p>
+                      <pre><code class="language-ruby"># bad
+rand(6) + 1
+
+# good
+rand(1..6)</code></pre>
                     </li>
                   </ul>
                 </section>
@@ -2694,24 +2693,120 @@ email, username = data.values_at('email', 'nickname')</code></pre>
                   <h2 class="section-title-2">Dizeler <a data-scroll href="#section-9" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Dize birleştirme yerine dize interpolasyonu ve dize formatını tercih edin:</p>
+                      <pre><code class="language-ruby"># bad
+email_with_name = user.name + ' <' + user.email + '>'
+
+# good
+email_with_name = "#{user.name} <#{user.email}>"
+
+# good
+email_with_name = format('%s <%s>', user.name, user.email)</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Tutarlı bir dize tırnak tarzı benimseyin. Ruby topluluğunda, iki popüler stil vardır - varsayılan olarak tek tırnak (Seçenek A) ve varsayılan olarak çift tırnak (Seçenek B).</p>
+                      <ul>
+                        <li>
+                          <p><b>(Seçenek A)</b> Dizi enterpolasyonuna veya <code>\t</code>, <code>\n</code>, <code>'</code>, vb. özel sembollere gerek duymuyorsanız, tek tırnaklı dizeleri tercih edin.</p>
+                          <pre><code class="language-ruby"># bad
+name = "Bozhidar"
+
+name = 'De\'Andre'
+
+# good
+name = 'Bozhidar'
+
+name = "De'Andre"</code></pre>
+                        </li>
+                        <li>
+                          <p><b>(Seçenek B)</b> Dizeniz <code>"</code> ya da kaçış karakteri içermiyorsa, çift tırnak tercih edin.</p>
+                          <pre><code class="language-ruby"># bad
+name = 'Bozhidar'
+
+sarcasm = "I \"like\" it."
+
+# good
+name = "Bozhidar"
+
+sarcasm = 'I "like" it.'</code></pre>
+                        </li>
+                      </ul>
+                      <p>Bu klavuzda ilk stil tercih edilmiştir.</p>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p><code>?x</code> sözdizimini kullanmayın. Ruby 1.9'dan beri temelde gereksizdir - <code>?x</code> <code>'x'</code> olarak yorumlanır.</p>
+                      <pre><code class="language-ruby"># bad
+char = ?c
+
+# good
+char = 'c'</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Örnek ve global değişkenleri <code>{}</code> dışında bırakmayın.</p>
+                      <pre><code class="language-ruby">class Person
+  attr_reader :first_name, :last_name
+
+  def initialize(first_name, last_name)
+    @first_name = first_name
+    @last_name = last_name
+  end
+
+  # bad - valid, but awkward
+  def to_s
+    "#@first_name #@last_name"
+  end
+
+  # good
+  def to_s
+    "#{@first_name} #{@last_name}"
+  end
+end
+
+$global = 0
+# bad
+puts "$global = #$global"
+
+# good
+puts "$global = #{$global}"</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>İnterpolasyonlu nesnelerde <code>Object#to_s</code> - otomatik olarak çağrıldığı için - kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+message = "This is the #{result.to_s}."
+
+# good
+message = "This is the #{result}."</code></pre>
+                    </li>
+                    <li>
+                      <p>Büyük veri parçaları oluşturmanız gerektiğinde <code>String#+</code> kullanmaktan kaçının, bunun yerine, <code>String#<<</code> kullanın. Birleştirme, dize örneğini yerinde değiştirir ve her zaman yeni dize nesneleri oluşturan <code>String#+</code>'dan daha hızlıdır.</p>
+                      <pre><code class="language-ruby"># bad
+html = ''
+html += '<h1>Page title</h1>'
+
+paragraphs.each do |paragraph|
+  html += "<p>#{paragraph}</p>"
+end
+
+# good and also fast
+html = ''
+html << '<h1>Page title</h1>'
+
+paragraphs.each do |paragraph|
+  html << "<p>#{paragraph}</p>"
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Daha hızlı ve daha özel bir alternatif kullanabileceğiniz senaryolarda <code>String#gsub</code> kullanmayın.</p>
+                      <pre><code class="language-ruby">url = 'http://example.com'
+str = 'lisp-case-rules'
+
+# bad
+url.gsub('http://', 'https://')
+str.gsub('-', '_')
+
+# good
+url.sub('http://', 'https://')
+str.tr('-', '_')</code></pre>
                     </li>
                   </ul>
                 </section>
