@@ -2707,7 +2707,7 @@ email_with_name = format('%s <%s>', user.name, user.email)</code></pre>
                       <p>Tutarlı bir dize tırnak tarzı benimseyin. Ruby topluluğunda, iki popüler stil vardır - varsayılan olarak tek tırnak (Seçenek A) ve varsayılan olarak çift tırnak (Seçenek B).</p>
                       <ul>
                         <li>
-                          <p><b>(Seçenek A)</b> Dizi enterpolasyonuna veya <code>\t</code>, <code>\n</code>, <code>'</code>, vb. özel sembollere gerek duymuyorsanız, tek tırnaklı dizeleri tercih edin.</p>
+                          <p><b>(Seçenek A)</b> Dizi interpolasyonuna veya <code>\t</code>, <code>\n</code>, <code>'</code>, vb. özel sembollere gerek duymuyorsanız, tek tırnaklı dizeleri tercih edin.</p>
                           <pre><code class="language-ruby"># bad
 name = "Bozhidar"
 
@@ -2817,24 +2817,24 @@ str.tr('-', '_')</code></pre>
                   <h2 class="section-title-2">Tarih ve Saat <a data-scroll href="#section-10" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Geçerli sistem saatini alırken, <code>Time.new</code> yerine <code>Time.now</code> tercih edin.</p>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
-                    </li>
-                    <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Tarihsel takvim reformunu hesaba katmanız gerekmediği sürece <code>DateTime</code> kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad - uses DateTime for current time
+DateTime.now
+
+# good - uses Time for current time
+Time.now
+
+# bad - uses DateTime for modern date
+DateTime.iso8601('2016-06-29')
+
+# good - uses Date for modern date
+Date.iso8601('2016-06-29')
+
+# good - uses DateTime with start argument for historical date
+DateTime.iso8601('1751-04-23', Date::ENGLAND)</code></pre>
                     </li>
                   </ul>
                 </section>
@@ -2845,24 +2845,63 @@ str.tr('-', '_')</code></pre>
                   <h2 class="section-title-2">Düzenli İfadeler <a data-scroll href="#section-11" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Dizede düz metin aramaya ihtiyacınız varsa düzenli ifadeleri kullanmayın: <code>string['text']</code></p>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Basit yapılar için regexp'i doğrudan dize indeksi üzerinden kullanabilirsiniz.</p>
+                      <pre><code class="language-ruby">match = string[/regexp/] # get content of matched regexp
+first_group = string[/text(grp)/, 1] # get content of captured group
+string[/text (grp)/, 1] = 'replace' # string => 'text replace'</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Yakalanan sonucu kullanmadığınızda diğer grupları kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+/(first|second)/
+
+# good
+/(?:first|second)/</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Son regexp grup eşleşmelerini ifade eden Perl değişkenlerini (<code>$1</code>, <code>$2</code>, vb.) kullanmayın. Bunun yerine <code>Regexp.last_match(n)</code> kullanın.</p>
+                      <pre><code class="language-ruby">/(regexp)/ =~ string
+...
+
+# bad
+process $1
+
+# good
+process Regexp.last_match(1)</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Numaralandırılmış grupları kullanmaktan kaçının çünkü içerdikleri şeyleri izlemek zor olabilir. Bunun yerine adlandırılmış gruplar kullanılabilir.</p>
+                      <pre><code class="language-ruby"># bad
+/(regexp)/ =~ string
+# some code
+process Regexp.last_match(1)
+
+# good
+/(?<meaningful_var>regexp)/ =~ string
+# some code
+process meaningful_var</code></pre>
+                    </li>
+                    <li>
+                      <p>Karakter sınıfları, dikkat etmeniz gereken sadece birkaç özel karakter içerir: <code>^</code>, <code>-</code>, <code>\</code>, <code>]</code>, bu yüzden <code>.</code> veya <code>[]</code> içindeki köşeli ayraçlardan kaçmayın.</p>
+                    </li>
+                    <li>
+                      <p>Karmaşık regexp işlemleri için <code>x</code> değiştiricisini kullanın. Bu onları daha okunaklı hale getirir ve bazı faydalı yorumlar ekleyebilirsiniz. Yalnızca, boşluklar göz ardı edilirken dikkatli olun.</p>
+                      <pre><code class="language-ruby">regexp = /
+  start         # some text
+  \s            # white space char
+  (group)       # first group
+  (?:alt1|alt2) # some alternation
+  end
+/x</code></pre>
+                    </li>
+                    <li>
+                      <p>Karmaşık değiştirmeler için <code>sub/gsub</code> bir blok veya çırpı ile kullanılabilir.</p>
+                      <pre><code class="language-ruby">words = 'foo bar'
+words.sub(/f/, 'f' => 'F') # => 'Foo bar'
+words.gsub(/\w+/) { |word| word.capitalize } # => 'Foo Bar'</code></pre>
                     </li>
                   </ul>
                 </section>
@@ -2873,24 +2912,55 @@ str.tr('-', '_')</code></pre>
                   <h2 class="section-title-2">Literaller <a data-scroll href="#section-12" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Hem interpolasyon hem de çift tırnak gerektiren tek satırlı dizeler için <code>%()</code> (<code>%Q</code> için kısa yoldur) kullanın. Çok satırlı dizeler için, heredoc'u seçin.</p>
+                      <pre><code class="language-ruby"># bad (no interpolation needed)
+%(&lt;div class="text"&gt;Some text&lt;/div&gt;)
+# should be '&lt;div class="text"&gt;Some text&lt;/div&gt;'
+
+# bad (no double-quotes)
+%(This is #{quality} style)
+# should be "This is #{quality} style"
+
+# bad (multiple lines)
+%(&lt;div&gt;\n&lt;span class="big"&gt;#{exclamation}&lt;/span&gt;\n&lt;/div&gt;)
+# should be a heredoc.
+
+# good (requires interpolation, has quotes, single line)
+%(&lt;tr&gt;&lt;td class="name"&gt;#{name}&lt;/td&gt;)</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>İçinde hem <code>'</code> hem de <code>"</code> olan bir dize olmadıkça <code>%()</code> veya eşdeğer <code>%q()</code> kullanmaktan kaçının. Normal dize literalleri daha okunaklıdır ve çok sayıda karakterden kaçmanıza gerek yoksa tercih edilmelidir.</p>
+                      <pre><code class="language-ruby"># bad
+name = %q(Bruce Wayne)
+time = %q(8 o'clock)
+question = %q("What did you say?")
+
+# good
+name = 'Bruce Wayne'
+time = "8 o'clock"
+question = '"What did you say?"'
+quote = %q(&lt;p class='quote'&gt;"What did you say?"&lt;/p&gt;)</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p><code>%r</code> ifadesini sadece en az bir <code>'/'</code> karakteriyle eşleşen normal ifadeler için kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+%r{\s+}
+
+# good
+%r{^/(.*)$}
+%r{^/blog/2011/(.*)$}</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>İçinde <code>`</code> olan bir komutu çağırmayacaksanız, <code>%x</code> kullanmaktan kaçının.</p>
+                      <pre><code class="language-ruby"># bad
+date = %x(date)
+
+# good
+date = `date`
+echo = %x(echo `date`)</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>%s kullanmaktan kaçının. <code>"some string"</code>, içinde boşluk bulunan bir sembol oluşturmanın tercih edilen yoludur.</p>
                     </li>
                   </ul>
                 </section>
@@ -2901,24 +2971,71 @@ str.tr('-', '_')</code></pre>
                   <h2 class="section-title-2">Meta Programlama <a data-scroll href="#section-13" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
                   <ul>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Gereksiz metaprogramlama yapmaktan kaçının.</p>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p>Kütüphane yazarken çekirdek sınıfların çevresinde çalışmayın. (monkey-patch yapmayın.)</p>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p><code>class_eval</code>'in blok formu, dize interpolasyonlu forma tercih edilir.</p>
+                      <ul>
+                        <li>
+                          <p>String interpolasyonlu formu kullandığınızda, her zaman <code>__FILE__</code> ve <code>__LINE__</code> parametrelerini verin, böylece backtraces'leriniz mantıklı olacaktır:</p>
+                          <pre><code class="language-ruby">class_eval 'def use_relative_model_naming?; true; end', __FILE__, __LINE__</code></pre>
+                        </li>
+                        <li>
+                          <p><code>define_method</code>, <code>class_eval{ def ... }</code>'e tercih edilir.</p>
+                        </li>
+                      </ul>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p><code>private/protected</code> görünürlüğü engellememek için <code>send</code> yerine <code>public_send</code>'i kullanın.</p>
+                      <pre><code class="language-ruby"># We have an ActiveModel Organization that includes concern Activatable
+module Activatable
+  extend ActiveSupport::Concern
+
+  included do
+    before_create :create_token
+  end
+
+  private
+
+  def reset_token
+    # some code
+  end
+
+  def create_token
+    # some code
+  end
+
+  def activate!
+    # some code
+  end
+end
+
+class Organization < ActiveRecord::Base
+  include Activatable
+end
+
+linux_organization = Organization.find(...)
+# BAD - violates privacy
+linux_organization.send(:reset_token)
+# GOOD - should throw an exception
+linux_organization.public_send(:reset_token)</code></pre>
                     </li>
                     <li>
-                      <p></p>
-                      <pre><code class="language-ruby"></code></pre>
+                      <p><code>send</code> yerine <code>__send__</code> tercih edin, çünkü <code>send</code> mevcut yöntemlerle çakışabilir.</p>
+                      <pre><code class="language-ruby">require 'socket'
+
+u1 = UDPSocket.new
+u1.bind('127.0.0.1', 4913)
+u2 = UDPSocket.new
+u2.connect('127.0.0.1', 4913)
+# Won't send a message to the receiver obj.
+# Instead it will send a message via UDP socket.
+u2.send :sleep, 0
+# Will actually send a message to the receiver obj.
+u2.__send__ ...</code></pre>
                     </li>
                   </ul>
                 </section>
