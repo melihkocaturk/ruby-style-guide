@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Melih Kocatürk">
+    <meta name="description" content="Ax Girişim Danışmanlığı Ruby on Rails Stil Rehberi">
+    <link rel="stylesheet" href="assets/css/vendor.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <title>Ruby on Rails Stil Rehberi</title>
+  </head>
+  <body data-spy="scroll" data-target="#toc">
+
+    <section class="py-0">
+      <div class="container-fluid">
+        <div class="row justify-content-between">
+
+          <!-- navigation -->
+          <aside class="col-lg-3 col-xxl-2 p-3 doc-sidebar">
+            <div class="sticky">
+              <nav class="navbar navbar-vertical navbar-expand-lg navbar-light">
+                <div>
+                  <a href="index.html" class="navbar-brand"><img src="assets/images/logo.png" alt="Logo"><span class="badge badge-red ml-2">1.0.0</span></a>
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                </div>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul id="page-nav" class="nav flex-column nav-vertical-2">
+                    <li class="nav-item active">
+                      <a class="nav-link" data-toggle="collapse" href="#menu-1" role="button" aria-expanded="true" aria-controls="menu-1">Stil Rehberi</a>
+                      <div class="collapse show" id="menu-1" data-parent="#page-nav">
+                        <ul class="nav flex-column">
+                          <li class="nav-item">
+                            <a class="nav-link" href="index.html">Ruby</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link active" href="rails.html">Ruby on Rails</a>
+                          </li>
+                        </ul>
+                      </div>
+                      <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#menu-2" role="button" aria-expanded="false" aria-controls="menu-2">Belgeler</a>
+                        <div class="collapse" id="menu-2" data-parent="#page-nav">
+                          <div>
+                            <ul class="nav flex-column">
+                              <li class="nav-item">
+                                <a class="nav-link" href="http://www.ruby-doc.org/docs/ProgrammingRuby/" target="blank" ref="nofollow">Ruby Programlama</a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="http://www.belgeler.org/uygulamalar/ruby/ruby-ug.html" target="blank" ref="nofollow">Ruby Kullanıcı Kılavuzu</a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="http://en.wikibooks.org/wiki/Ruby_programming_language" target="blank" ref="nofollow">Ruby Wiki</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#menu-3" role="button" aria-expanded="false" aria-controls="menu-3">Kütüphaneler</a>
+                        <div class="collapse" id="menu-3" data-parent="#page-nav">
+                          <div>
+                            <ul class="nav flex-column">
+                              <li class="nav-item">
+                                <a class="nav-link" href="http://rubyforge.org/" target="blank" ref="nofollow">RubyForge</a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="https://guides.rubygems.org/" target="blank" ref="nofollow">RubyGems</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#menu-4" role="button" aria-expanded="false" aria-controls="menu-4">Topluluk</a>
+                        <div class="collapse" id="menu-4" data-parent="#page-nav">
+                          <div>
+                            <ul class="nav flex-column">
+                              <li class="nav-item">
+                                <a class="nav-link" href="http://rubyusergroups.org/" target="blank" ref="nofollow">Ruby Kullanıcı Grupları</a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="https://rubyweekly.com/" target="blank" ref="nofollow">Ruby Weekly</a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="http://www.rubyflow.com/" target="blank" ref="nofollow">RubyFlow</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </li>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+          </aside>
+          <!-- / navigation -->
+
+          <!-- content -->
+          <article class="col-lg-9 col-xxl-10 doc-content">
+
+            <div class="row justify-content-between doc-content-body">
+              <article class="col-md-9 col-xxl-8">
+
+                <h1 class="h2 font-weight-light"><b>Ruby on Rails</b> Stil Rehberi</h1>
+
+                <section>
+                  <h2 class="section-title-2">Giriş</h2>
+                  <p>Bu rehber, gerçek dünyadaki Rails programcılarının diğer gerçek dünyadaki Rails programcıları tarafından sürdürülebilen kod yazabilmesi için en iyi uygulamaları önerir. Bir stil rehberi gerçek dünyadaki kullanımı yansıtır, ne kadar iyi olduğuna bakılmaksızın oluşabilecek riskleri azaltmak için rehber gereklidir.</p>
+                  <p>Rehberde, ilgili kurallar çeşitli bölümlere ayrılmıştır. Kuralların arkasındaki mantığı eklemeye çalıştım (Eğer atlamışsam, bunun oldukça açık olduğunu varsaymışımdır).</p>
+                  <p>Hiçbir yerde kuralların tamamını bulamadım - çoğu profesyonel yazılım mühendisliği tecrübeme, Rails topluluğunun üyelerinden gelen geri bildirim ve önerilere ve çeşitli kabul görmüş Rails programlama kaynaklarına dayanıyor.</p>
+                  <p>Bu rehberin amacı, Ruby on Rails'in geliştirilmesine yönelik bir dizi en iyi uygulama ve stil yönergeleri sunmaktır. Topluluğun katkısıyla hazırlanan <a href="ruby.html">Ruby Stil Rehberi</a> için tamamlayıcı bir rehberdir.</p>
+                </section>
+
+                <!-- configuration -->
+                <section id="section-1">
+                  <h2 class="section-title-2">Yapılandırma (Configuration) <a data-scroll href="#section-1" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>Özel başlatma kodlarını <code>config/initializers</code> içine yerleştirin. <code>initializers</code> içindeki kodlar uygulama başlatılırken yürütülür.</p>
+                    </li>
+                    <li>
+                      <p>Her gem için başlatma kodunu, gem ile aynı ada sahip ayrı bir dosyada tutun, örneğin <code>carrierwave.rb</code>, <code>active_admin.rb</code>, vb.</p>
+                    </li>
+                    <li>
+                      <p>Geliştirme (development), test ve üretim (production) ortamlarını doğru şekilde yapılandırın (<code>config/environments/</code> altındaki ilgili dosyalar).</p>
+                      <ul>
+                        <li>
+                          <p>Ön derleme için ek varlıkları belirtin (varsa):</p>
+                          <pre><code class="language-ruby"># config/environments/production.rb
+# Precompile additional assets (application.js, application.css,
+#and all non-JS/CSS are already added)
+config.assets.precompile += %w( rails_admin/rails_admin.css rails_admin/rails_admin.js )</code></pre>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <p><code>config/application.rb</code> dosyasında tüm ortamlar için geçerli olan yapılandırmayı saklayın.</p>
+                    </li>
+                    <li>
+                      <p><code>production</code> ortamına çok benzeyen ek bir <code>staging</code> ortamı oluşturun.</p>
+                    </li>
+                    <li>
+                      <p>Tüm konfigürasyonları <code>config/</code> dizini altındaki YAML dosyalarında saklayın. Rails 4.2'den bu yana YAML konfigürasyon dosyaları, <code>config_for</code> metodu ile kolayca yüklenebilir:</p>
+                      <pre><code class="language-ruby">Rails::Application.config_for(:yaml_file)</code></pre>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / configuration -->
+
+                <!-- routing -->
+                <section id="section-2">
+                  <h2 class="section-title-2">Yönlendirme (Routing) <a data-scroll href="#section-2" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>RESTful bir kaynağa daha fazla eylem (action) eklemeniz gerektiğinde (gerçekten ihtiyacınız var mı?) <code>member</code> ve <code>collection</code> rotalarını kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+get 'subscriptions/:id/unsubscribe'
+resources :subscriptions
+
+# good
+resources :subscriptions do
+  get 'unsubscribe', on: :member
+end
+
+# bad
+get 'photos/search'
+resources :photos
+
+# good
+resources :photos do
+  get 'search', on: :collection
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Birden fazla <code>member/collection</code> tanımlamanız gerekiyorsa, alternatif blok sözdizimini kullanın.</p>
+                      <pre><code class="language-ruby">resources :subscriptions do
+  member do
+    get 'unsubscribe'
+    # more routes
+  end
+end
+
+resources :photos do
+  collection do
+    get 'search'
+    # more routes
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>ActiveRecord modelleri arasındaki ilişkiyi daha iyi ifade etmek için rotaları iç içe kullanın.</p>
+                      <pre><code class="language-ruby">class Post < ActiveRecord::Base
+  has_many :comments
+end
+
+class Comment < ActiveRecord::Base
+  belongs_to :post
+end
+
+# routes.rb
+resources :posts do
+  resources :comments
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Rotaları 1 seviyeden daha derinlere yerleştirmeniz gerekirse, <code>shallow: true</code> seçeneğini kullanın. Bu, kullanıcıyı uzun URL'lerden <code>posts/1/comments/5/versions/7/edit</code> ve sizi uzun URL yardımcılarından <code>edit_post_comment_version</code> kurtarır.</p>
+                      <pre><code class="language-ruby">resources :posts, shallow: true do
+  resources :comments do
+    resources :versions
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>İlgili rotaları gruplandırmak için ad alanlarını (namespace) kullanın.</p>
+                      <pre><code class="language-ruby">namespace :admin do
+  # Directs /admin/products/* to Admin::ProductsController
+  # (app/controllers/admin/products_controller.rb)
+  resources :products
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Asla eski dağınık denetleyici (controller) rotalarını kullanmayın. Bu rota her bir denetleyicideki tüm eylemleri GET ile ulaşılabilir yapacaktır.</p>
+                      <pre><code class="language-ruby"># very bad
+match ':controller(/:action(/:id(.:format)))'</code></pre>
+                    </li>
+                    <li>
+                      <p>Herhangi bir rota tanımlamak için <code>match</code> kullanmayın.</p>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / routing -->
+
+                <!-- controllers -->
+                <section id="section-3">
+                  <h2 class="section-title-2">Denetleyiciler (Controllers) <a data-scroll href="#section-3" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>Denetleyicileri zayıf tutun - yalnızca görüntü (view) katmanı için veri almalı ve herhangi bir iş mantığı içermemelidir (tüm iş mantığı doğal olarak modelde bulunmalıdır).</p>
+                    </li>
+                    <li>
+                      <p>Her denetleyici eylemi (ideal olarak) başlangıçtaki <code>find</code> veya <code>new</code> dışında yalnızca bir yöntemi çağırmalıdır.</p>
+                    </li>
+                    <li>
+                      <p>Denetleyici ve görünüm arasında en fazla iki örnek değişkeni paylaşın.</p>
+                    </li>
+                    <li>
+                      <p><code>ActionFilter</code> seçeneğinde belirtilen denetleyici eylemleri sözcüksel kapsamda olmalıdır. Miras alınan bir işlem için belirtilen <code>ActionFilter</code>, bu eylem üzerindeki etkisinin kapsamını anlamayı zorlaştırır.</p>
+                      <pre><code class="language-ruby"># bad
+class UsersController < ApplicationController
+  before_action :require_login, only: :export
+end
+
+# good
+class UsersController < ApplicationController
+  before_action :require_login, only: :export
+
+  def export
+  end
+end</code></pre>
+                    </li>
+                  </ul>
+                  <h3 class="h4">Görselleştirme (Rendering)</h3>
+                  <ul>
+                    <li>
+                      <p>Satır içinde görüntü oluşturmak yerine şablon kullanmayı tercih edin.</p>
+                      <pre><code class="language-ruby"># very bad
+class ProductsController < ApplicationController
+  def index
+    render inline: "<% products.each do |p| %><p><%= p.name %></p><% end %>", type: :erb
+  end
+end
+
+# good
+## app/views/products/index.html.erb
+<%= render partial: 'product', collection: products %>
+
+## app/views/products/_product.html.erb
+<p><%= product.name %></p>
+<p><%= product.price %></p>
+
+## app/controllers/foo_controller.rb
+class ProductsController < ApplicationController
+  def index
+    render :index
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>render text:</code> yerine <code>render plain:</code> tercih edin.</p>
+                      <pre><code class="language-ruby"># bad - sets MIME type to `text/html`
+...
+render text: 'Ruby!'
+...
+
+# bad - requires explicit MIME type declaration
+...
+render text: 'Ruby!', content_type: 'text/plain'
+...
+
+# good - short and precise
+...
+render plain: 'Ruby!'
+...</code></pre>
+                    </li>
+                    <li>
+                      <p>Sayısal HTTP durum kodlarına karşılık gelen sembolleri tercih edin. Anlamlılar ve daha az bilinen HTTP durum kodları için "sihirli" sayılar gibi görünmüyorlar.</p>
+                      <pre><code class="language-ruby"># bad
+...
+render status: 403
+...
+
+# good
+...
+render status: :forbidden</code></pre>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / controllers -->
+
+                <!-- models -->
+                <section id="section-4">
+                  <h2 class="section-title-2">Modeller <a data-scroll href="#section-4" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>ActiveRecord olmayan model sınıflarını özgürce oluşturabilirsiniz.</p>
+                    </li>
+                    <li>
+                      <p>Modelleri kısaltma kullanmadan anlamlı (fakat kısa) isimlerle adlandırın.</p>
+                    </li>
+                    <li>
+                      <p>ActiveRecord veritabanı işlevi olmadan ActiveRecord davranışını (doğrulama gibi) destekleyen model nesnelerine ihtiyacınız varsa, <a href="https://github.com/cgriego/active_attr" target="blank" rel="nofollow">ActiveAttr</a> gem'i kullanın.</p>
+                      <pre><code class="language-ruby">class Message
+  include ActiveAttr::Model
+
+  attribute :name
+  attribute :email
+  attribute :content
+  attribute :priority
+
+  attr_accessible :name, :email, :content
+
+  validates :name, presence: true
+  validates :email, format: { with: /\A[-a-z0-9_+\.]+\@([-a-z0-9]+\.)+[a-z0-9]{2,4}\z/i }
+  validates :content, length: { maximum: 500 }
+end</code></pre>
+                      <p>Konuyla ilgili daha kapsamlı örnekler için <a href="http://railscasts.com/episodes/326-activeattr" target="blank" rel="nofollow">RailsCast</a>'e bakın.</p>
+                    </li>
+                    <li>
+                      <p>İş mantığı için anlamlı değilse, modelinize yalnızca verilerinizi biçimlendiren yöntemler (HTML üreten kod gibi) yerleştirmeyin. Bu yöntemlerin büyük olasılıkla yalnızca görünüm katmanından çağrılması gerekir, bu yüzden onların yeri yardımcılar (helpers)'dır. Modellerinizi yalnızca iş mantığı ve veri sürekliliği için saklayın.</p>
+                    </li>
+                  </ul>
+                  <h3 class="h4">ActiveRecord</h3>
+                  <ul>
+                    <li>
+                      <p>Çok iyi bir nedeniniz olmadıkça (kontrolünüz altında olmayan bir veritabanı gibi) ActiveRecord varsayılanlarını (tablo adları, birincil anahtar vb.) değiştirmekten kaçının.</p>
+                      <pre><code class="language-ruby"># bad - don't do this if you can modify the schema
+class Transaction < ActiveRecord::Base
+  self.table_name = 'order'
+  ...
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Makro tarzı yöntemleri (<code>has_many</code>, <code>validates</code>, vb.) sınıf tanımının başında gruplandırın.</p>
+                      <pre><code class="language-ruby">class User < ActiveRecord::Base
+  # keep the default scope first (if any)
+  default_scope { where(active: true) }
+
+  # constants come up next
+  COLORS = %w(red green blue)
+
+  # afterwards we put attr related macros
+  attr_accessor :formatted_date_of_birth
+
+  attr_accessible :login, :first_name, :last_name, :email, :password
+
+  # Rails4+ enums after attr macros, prefer the hash syntax
+  enum gender: { female: 0, male: 1 }
+
+  # followed by association macros
+  belongs_to :country
+
+  has_many :authentications, dependent: :destroy
+
+  # and validation macros
+  validates :email, presence: true
+  validates :username, presence: true
+  validates :username, uniqueness: { case_sensitive: false }
+  validates :username, format: { with: /\A[A-Za-z][A-Za-z0-9._-]{2,19}\z/ }
+  validates :password, format: { with: /\A\S{8,128}\z/, allow_nil: true }
+
+  # next we have callbacks
+  before_save :cook
+  before_save :update_username_lower
+
+  # other macros (like devise's) should be placed after the callbacks
+
+  ...
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>has_and_belongs_to_many</code> yerine <code>has_many :through</code> tercih edin. <code>has_many :through</code> kullanmak, birleştirme modelinde ek özellikler ve doğrulamalar sağlar.</p>
+                      <pre><code class="language-ruby"># not so good - using has_and_belongs_to_many
+class User < ActiveRecord::Base
+  has_and_belongs_to_many :groups
+end
+
+class Group < ActiveRecord::Base
+  has_and_belongs_to_many :users
+end
+
+# preferred way - using has_many :through
+class User < ActiveRecord::Base
+  has_many :memberships
+  has_many :groups, through: :memberships
+end
+
+class Membership < ActiveRecord::Base
+  belongs_to :user
+  belongs_to :group
+end
+
+class Group < ActiveRecord::Base
+  has_many :memberships
+  has_many :users, through: :memberships
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>read_attribute(:attribute)</code> yerine <code>self[:attribute]</code> tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+def amount
+  read_attribute(:amount) * 100
+end
+
+# good
+def amount
+  self[:amount] * 100
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>write_attribute(:attribute, value)</code> yerine <code>self[:attribute] = value</code> tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+def amount
+  write_attribute(:amount, 100)
+end
+
+# good
+def amount
+  self[:amount] = 100
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Her zaman yeni doğrulama stilini kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+validates_presence_of :email
+validates_length_of :email, maximum: 100
+
+# good
+validates :email, presence: true, length: { maximum: 100 }</code></pre>
+                    </li>
+                    <li>
+                      <p>Doğrulamaları okumayı kolaylaştırmak için doğrulama başına birden çok özellik listelemeyin.</p>
+                      <pre><code class="language-ruby"># bad
+validates :email, :password, presence: true
+validates :email, length: { maximum: 100 }
+
+# good
+validates :email, presence: true, length: { maximum: 100 }
+validates :password, presence: true</code></pre>
+                    </li>
+                    <li>
+                      <p>Özel bir doğrulama bir kereden fazla kullanıldığında ya da düzenli ifadeler ile eşleştirme yapıyorsanız, özel bir validator dosyası yaratın.</p>
+                      <pre><code class="language-ruby"># bad
+class Person
+  validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
+end
+
+# good
+class EmailValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    record.errors[attribute] << (options[:message] || 'is not a valid email') unless value =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+  end
+end
+
+class Person
+  validates :email, email: true
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Özel doğrulayıcıları <code>app/validators</code> altında tutun.</p>
+                    </li>
+                    <li>
+                      <p>Adlandırılmış kapsamları (scope) özgürce kullanın.</p>
+                      <pre><code class="language-ruby">class User < ActiveRecord::Base
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
+
+  scope :with_orders, -> { joins(:orders).select('distinct(users.id)') }
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Lambda ile kapsam tanımlandığında ve parametreler çok karmaşık hale geldiğinde, bunun yerine aynı amaca hizmet eden ve <code>ActiveRecord::Relation</code> nesnesi döndüren bir sınıf yöntemi tanımlamak tercih edilir. Muhtemelen bunun gibi daha basit kapsamları tanımlayabilirsiniz.</p>
+                      <pre><code class="language-ruby">class User < ActiveRecord::Base
+  def self.with_orders
+    joins(:orders).select('distinct(users.id)')
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Geri çağrıları, uygulanacakları sıraya göre yerleştirin. Başvuru için bkz. <a href="https://guides.rubyonrails.org/active_record_callbacks.html#available-callbacks" target="blank" rel="nofollow">Available Callbacks</a></p>
+                      <pre><code class="language-ruby">#bad
+class Person
+  after_commit/after_rollback :after_commit_callback
+  after_save :after_save_callback
+  around_save :around_save_callback
+  after_update :after_update_callback
+  before_update :before_update_callback
+  after_validation :after_validation_callback
+  before_validation :before_validation_callback
+  before_save :before_save_callback
+  before_create :before_create_callback
+  after_create :after_create_callback
+  around_create :around_create_callback
+  around_update :around_update_callback
+end
+
+#good
+class Person
+  before_validation :before_validation_callback
+  after_validation :after_validation_callback
+  before_save :before_save_callback
+  around_save :around_save_callback
+  before_create :before_create_callback
+  around_create :around_create_callback
+  after_create :after_create_callback
+  before_update :before_update_callback
+  around_update :around_update_callback
+  after_update :after_update_callback
+  after_save :after_save_callback
+  after_commit/after_rollback :after_commit_callback
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Aşağıdaki yöntemlerin davranışına dikkat edin. Model doğrulamalarını çalıştırmazlar ve modelin durumunu kolayca bozabilirler.</p>
+                      <pre><code class="language-ruby"># bad
+Article.first.decrement!(:view_count)
+DiscussionBoard.decrement_counter(:post_count, 5)
+Article.first.increment!(:view_count)
+DiscussionBoard.increment_counter(:post_count, 5)
+person.toggle :active
+product.touch
+Billing.update_all("category = 'authorized', author = 'David'")
+user.update_attribute(:website, 'example.com')
+user.update_columns(last_request_at: Time.current)
+Post.update_counters 5, comment_count: -1, action_count: 1
+
+# good
+user.update_attributes(website: 'example.com')</code></pre>
+                    </li>
+                    <li>
+                      <p>Kullanıcı dostu URL’leri kullanın. Modelin açıklayıcı bir özelliğini <code>id</code> yerine gösterin. Bunu yapmanın birden fazla yolu vardır:</p>
+                      <ul>
+                        <li>
+                          <p>Modelin <code>to_param</code> yönteminin üzerine yazın. Bu yöntem, Rails tarafından nesneye URL oluşturmak için kullanılır. Varsayılan uygulama kaydın <code>id</code>'sini bir dize olarak döndürür. İnsan tarafından okunabilen başka bir özellik eklenerek geçersiz kılınabilir.</p>
+                          <pre><code class="language-ruby">class Person
+  def to_param
+    "#{id} #{name}".parameterize
+  end
+end</code></pre>
+                        </li>
+                      </ul>
+                      <p>Bunu URL dostu bir değere dönüştürmek için <code>parameterize</code> ifadesi kullanılır. Nesnenin <code>id</code>'si başta olmalıdır, böylece ActiveRecord'un <code>find</code> yöntemiyle bulunabilir.</p>
+                      <ul>
+                        <li>
+                          <p><code>friendly_id</code> gemini kullanın. Model <code>id</code>'si yerine açıklayıcı bir özelliğini kullanarak insan tarafından okunabilen URL'lerin oluşturulmasını sağlar.</p>
+                          <pre><code class="language-ruby">class Person
+  extend FriendlyId
+  friendly_id :name, use: :slugged
+end</code></pre>
+                        </li>
+                      </ul>
+                      <p>Kullanımı hakkında daha fazla bilgi için <a href="https://github.com/norman/friendly_id" target="blank" rel="nofollow">gem dökümantasyonuna</a> bakın.</p>
+                    </li>
+                    <li>
+                      <p>ActiveRecord nesneleri üzerinde yineleme yapmak için <code>find_each</code> komutunu kullanın. Veritabanında koleksiyonlar aracılığıyla yineleme yapmak (örneğin, <code>all</code> yöntemini kullanarak), tüm nesneleri bir seferde başlatmaya çalışacağı için oldukça verimsizdir. Toplu işlem yöntemleri, kayıtlarla gruplar halinde çalışmanıza izin vererek bellek tüketimini büyük ölçüde azaltır.</p>
+                      <pre><code class="language-ruby"># bad
+Person.all.each do |person|
+  person.do_awesome_stuff
+end
+
+Person.where('age > 21').each do |person|
+  person.party_all_night!
+end
+
+# good
+Person.find_each do |person|
+  person.do_awesome_stuff
+end
+
+Person.where('age > 21').find_each do |person|
+  person.party_all_night!
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>before_destroy</code> geri çağrılarını kullanırken her zaman <code>prepend: true</code> ile doğrulama yapın.</p>
+                      <pre><code class="language-ruby"># bad (roles will be deleted automatically even if super_admin? is true)
+has_many :roles, dependent: :destroy
+
+before_destroy :ensure_deletable
+
+def ensure_deletable
+  raise "Cannot delete super admin." if super_admin?
+end
+
+# good
+has_many :roles, dependent: :destroy
+
+before_destroy :ensure_deletable, prepend: true
+
+def ensure_deletable
+  raise "Cannot delete super admin." if super_admin?
+end</code></pre>
+                    </li>
+                    <li>
+                      <p><code>has_many</code> ve <code>has_one</code> ilişkilerinde <code>dependent</code> seçeneğini tanımlayın.</p>
+                      <pre><code class="language-ruby"># bad
+class Post < ActiveRecord::Base
+  has_many :comments
+end
+
+# good
+class Post < ActiveRecord::Base
+  has_many :comments, dependent: :destroy
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Kalıcı ActiveRecord nesnelerinde daima istisna fırlatan bang! yöntemini kullanın veya yöntem dönüş değerini işleyin. </p>
+                      <pre><code class="language-ruby"># bad
+user.create(name: 'Bruce')
+
+# bad
+user.save
+
+# good
+user.create!(name: 'Bruce')
+# or
+bruce = user.create(name: 'Bruce')
+if bruce.persisted?
+  ...
+else
+  ...
+end
+
+# good
+user.save!
+# or
+if user.save
+  ...
+else
+  ...
+end</code></pre>
+                    </li>
+                  </ul>
+                  <h3 class="h4">ActiveRecord Queries</h3>
+                  <ul>
+                    <li>
+                      <p>Kodunuzu SQL enjeksiyon saldırılarına duyarlı hale getireceğinden sorgu içinde string interpolasyonundan kaçının.</p>
+                      <pre><code class="language-ruby"># bad - param will be interpolated unescaped
+Client.where("orders_count = #{params[:orders]}")
+
+# good - param will be properly escaped
+Client.where('orders_count = ?', params[:orders])</code></pre>
+                    </li>
+                    <li>
+                      <p>Birincil anahtar ile tek bir kayıt almanız ve kayıt bulunmadığında ActiveRecord::RecordNotFound istisnasını fırlatmanız gerektiğinde <code>where.take!</code>, <code>find_by!</code> veya <code>find_by_id!</code> yerine <code>find</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+User.where(id: id).take!
+
+# bad
+User.find_by_id!(id)
+
+# bad
+User.find_by!(id: id)
+
+# good
+User.find(id)</code></pre>
+                    </li>
+                    <li>
+                      <p>Bir veya daha fazla nitelik ile tek bir kayıt almanız ve kayıt bulunmadığında <code>nil</code> döndürmeniz gerektiğinde <code>where.take</code> veya <code>find_by_attribute</code> yerine <code>find_by</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+User.where(email: email).take
+User.where(first_name: 'Bruce', last_name: 'Wayne').take
+
+# bad
+User.find_by_email(email)
+# bad, deprecated in ActiveRecord 4.0, removed in 4.1+
+User.find_by_first_name_and_last_name('Bruce', 'Wayne')
+
+# good
+User.find_by(email: email)
+User.find_by(first_name: 'Bruce', last_name: 'Wayne')</code></pre>
+                    </li>
+                    <li>
+                      <p>SQL yerine <code>where.not</code> kullanmayı tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+User.where("id != ?", id)
+
+# good
+User.where.not(id: id)</code></pre>
+                    </li>
+                    <li>
+                      <p>Sıralamak için <code>id</code> sütununu kullanmayın. <code>id</code> dizilerinin - çoğu zaman kronolojik olmasına rağmen - belirli bir düzende olması garanti edilmez. Kronolojik olarak sıralamak için zaman damgası sütunu kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+scope :chronological, -> { order(id: :asc) }
+
+# good
+scope :chronological, -> { order(created_at: :asc) }</code></pre>
+                    </li>
+                    <li>
+                      <p><code>pluck(:id)</code> yerine <code>ids</code> kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+User.pluck(:id)
+
+# good
+User.ids</code></pre>
+                    </li>
+                    <li>
+                      <p><code>find_by_sql</code> gibi bir yöntemde açık bir sorgu belirtirken, <code>squish</code> ile heredocs kullanın. Böylece, birçok araçta (GitHub, Atom ve RubyMine dahil) sözdizimini vurgularken, SQL'i satır başları ve girintilerle okunaklı şekilde biçimlendirebilirsiniz.</p>
+                      <pre><code class="language-ruby">User.find_by_sql(<<-SQL.squish)
+  SELECT
+    users.id, accounts.plan
+  FROM
+    users
+  INNER JOIN
+    accounts
+  ON
+    accounts.user_id = users.id
+  # further complexities...
+SQL</code></pre>
+                      <p><code>String#squish</code>, girinti ve yeni satır karakterlerini kaldırır, böylece sunucu günlüğünüz bunun gibi bir şey yerine akıcı bir SQL dizesi gösterir.</p>
+                      <pre><code class="language-bash">SELECT\n    users.id, accounts.plan\n  FROM\n    users\n  INNER JOIN\n    acounts\n  ON\n    accounts.user_id = users.id</code></pre>
+                    </li>
+                    <li>
+                      <p>ActiveRecord nesnelerini sorgularken <code>count</code> (saymak için her zaman bir veritabanı sorgusu oluşturur) yerine <code>size</code> (koleksiyonun yüklü olup olmamasına bağlı olarak count/length davranışı arasında seçim yapar) yada <code>length</code> (her zaman tüm koleksiyonu yükler ve dizi öğelerini sayar) tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+User.count
+
+# good
+User.all.size
+
+# good - if you really need to load all users into memory
+User.all.length</code></pre>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / models -->
+
+                <!-- migrations -->
+                <section id="section-5">
+                  <h2 class="section-title-2">Taşıma İşlemleri (Migrations) <a data-scroll href="#section-5" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p><code>schema.rb</code> (veya <code>structure.sql</code>) sürümünü kontrol altında tutun.</p>
+                    </li>
+                    <li>
+                      <p>Boş bir veritabanı oluşturmak için <code>rake db:migrate</code> yerine <code>db:schema:load</code> kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Varsayılan değerleri uygulama katmanında değil, migration üzerinde uygulayın.</p>
+                      <pre><code class="language-ruby"># bad - application enforced default value
+class Product < ActiveRecord::Base
+  def amount
+    self[:amount] || 0
+  end
+end
+
+# good - database enforced
+class AddDefaultAmountToProducts < ActiveRecord::Migration
+  def change
+    change_column_default :products, :amount, 0
+  end
+end</code></pre>
+                      <p>Tablo varsayılanlarını uygulamak birçok Rails geliştiricisi tarafından önerilmiş olsa da, verilerinizi birçok uygulama hatalarına karşı savunmasız bırakan son derece kırılgan bir yaklaşımdır. Ve çoğu uygulamanın veritabanını diğer uygulamalarla paylaştığı gerçeğini göz önünde bulundurmanız gerekir, bu nedenle Rails uygulamasından veri bütünlüğü sağlamak imkansızdır.</p>
+                    </li>
+                    <li>
+                      <p>Yabancı anahtar kısıtlamalarını uygulayın. Rails 4.2'den itibaren, ActiveRecord yerel olarak yabancı anahtar kısıtlamalarını destekler.</p>
+                    </li>
+                    <li>
+                      <p>Yapısal migration yazarken (tablo veya sütun eklerken) <code>up</code> ve <code>down</code> yerine <code>change</code> kullanın.</p>
+                      <pre><code class="language-ruby"># the old way
+class AddNameToPeople < ActiveRecord::Migration
+  def up
+    add_column :people, :name, :string
+  end
+
+  def down
+    remove_column :people, :name
+  end
+end
+
+# the new preferred way
+class AddNameToPeople < ActiveRecord::Migration
+  def change
+    add_column :people, :name, :string
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Modelleri migration içinde kullanmanız gerekiyorsa daha önce bunları tanımladığınızdan emin olun, böylece gelecekte kırık migration ile karşılaşmayacaksınız. </p>
+                      <pre><code class="language-ruby"># db/migrate/&lt;migration_file_name&gt;.rb
+# frozen_string_literal: true
+
+# bad
+class ModifyDefaultStatusForProducts < ActiveRecord::Migration
+  def change
+    old_status = 'pending_manual_approval'
+    new_status = 'pending_approval'
+
+    reversible do |dir|
+      dir.up do
+        Product.where(status: old_status).update_all(status: new_status)
+        change_column :products, :status, :string, default: new_status
+      end
+
+      dir.down do
+        Product.where(status: new_status).update_all(status: old_status)
+        change_column :products, :status, :string, default: old_status
+      end
+    end
+  end
+end
+
+# good
+# Define `table_name` in a custom named class to make sure that
+# you run on the same table you had during the creation of the migration.
+# In future if you override the `Product` class
+# and change the `table_name`, it won't break
+# the migration or cause serious data corruption.
+class MigrationProduct < ActiveRecord::Base
+  self.table_name = :products
+end
+
+class ModifyDefaultStatusForProducts < ActiveRecord::Migration
+  def change
+    old_status = 'pending_manual_approval'
+    new_status = 'pending_approval'
+
+    reversible do |dir|
+      dir.up do
+        MigrationProduct.where(status: old_status).update_all(status: new_status)
+        change_column :products, :status, :string, default: new_status
+      end
+
+      dir.down do
+        MigrationProduct.where(status: new_status).update_all(status: old_status)
+        change_column :products, :status, :string, default: old_status
+      end
+    end
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Rails tarafından otomatik olarak oluşturulan yabancı anahtar adlarına güvenmek yerine, yabancı anahtarlarınızı açıkça adlandırın. (<a href="https://guides.rubyonrails.org/active_record_migrations.html#foreign-keys" target="blank" rel="nofollow">https://guides.rubyonrails.org/active_record_migrations.html#foreign-keys</a>)</p>
+                      <pre><code class="language-ruby"># bad
+class AddFkArticlesToAuthors < ActiveRecord::Migration
+  def change
+    add_foreign_key :articles, :authors
+  end
+end
+
+# good
+class AddFkArticlesToAuthors < ActiveRecord::Migration
+  def change
+    add_foreign_key :articles, :authors, name: :articles_author_id_fk
+  end
+end</code></pre>
+                    </li>
+                    <li>
+                      <p>Geri dönüşü olmayan komutları kullanmayın. Tersine çevrilebilir komutlar <a href="https://api.rubyonrails.org/classes/ActiveRecord/Migration/CommandRecorder.html" target="blank" rel="nofollow">burada</a> listelenmiştir. </p>
+                      <pre><code class="language-ruby"># bad
+class DropUsers < ActiveRecord::Migration
+  def change
+    drop_table :users
+  end
+end
+
+# good
+class DropUsers < ActiveRecord::Migration
+  def up
+    drop_table :users
+  end
+
+  def down
+    create_table :users do |t|
+      t.string :name
+    end
+  end
+end
+
+# good
+# In this case, block will be used by create_table in rollback
+# http://api.rubyonrails.org/classes/ActiveRecord/ConnectionAdapters.html#method-i-drop_table
+class DropUsers < ActiveRecord::Migration
+  def change
+    drop_table :users do |t|
+      t.string :name
+    end
+  end
+end</code></pre>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / migrations -->
+
+                <!-- views -->
+                <section id="section-6">
+                  <h2 class="section-title-2">Görünümler (Views) <a data-scroll href="#section-6" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>Model katmanını asla doğrudan görünümde çağırmayın.</p>
+                    </li>
+                    <li>
+                      <p>Görünümde karmaşık biçimlendirmelerden kaçının. Helper metodlar basit durumlar için kullanışlıdır.</p>
+                    </li>
+                    <li>
+                      <p>Kısmi şablon (partial) ve düzen (layout) kullanarak kod tekrarını azaltın.</p>
+                    </li>
+                    <li>
+                      <p>Örnek değişkenleri partial olarak kullanmaktan kaçının, bunun yerine render için yerel bir değişkeni parametre olarak verin. Partial, değişkenin farklı bir isme sahip olduğu veya değişkenin bulunmadığı farklı bir denetleyicide veya eylemde kullanılabilir. Bu gibi durumlarda, tanımsız bir örnek değişken istisna fırlatmaz.</p>
+                      <pre><code class="language-ruby">&lt;!-- bad --&gt;
+&lt;!-- app/views/courses/show.html.erb --&gt;
+<%= render 'course_description' %>
+&lt;!-- app/views/courses/_course_description.html.erb --&gt;
+<%= @course.description %>
+
+&lt;!-- good --&gt;
+&lt;!-- app/views/courses/show.html.erb --&gt;
+<%= render 'course_description', course: @course %>
+&lt;!-- app/views/courses/_course_description.html.erb --&gt;
+<%= course.description %></code></pre>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / views -->
+
+                <!-- internationalization -->
+                <section id="section-7">
+                  <h2 class="section-title-2">Uluslararasılaştırma (Internationalization) <a data-scroll href="#section-7" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>Görünümlerde, modellerde ve denetleyicilerinde hiçbir yerel ayar kullanılmamalıdır. Bu metinler <code>config/locales</code> dizinindeki ilgili dosyalara taşınmalıdır.</p>
+                    </li>
+                    <li>
+                      <p>ActiveRecord model etiketlerinin çevrilmesi gerektiğinde, <code>activerecord</code> kapsamını kullanın:</p>
+                      <pre><code class="language-ruby">en:
+  activerecord:
+    models:
+      user: Member
+    attributes:
+      user:
+        name: 'Full name'</code></pre>
+                      <p>Devamında <code>User.model_name.human</code> "Member" ve <code>User.human_attribute_name("name")</code> "Full name" döndürür. Özelliklerin çevirileri görünümlerde etiket olarak kullanılacaktır.</p>
+                    </li>
+                    <li>
+                      <p>Görünümlerde kullanılan metinleri ActiveRecord niteliklerinin çevirilerinden ayırın. Modeller için dosyaları <code>locales/models</code> klasörüne ve görünümlerde kullanılan metinleri <code>locales/views</code> klasörüne yerleştirin.</p>
+                      <ul>
+                        <li>
+                          <p>Yerel dosyaların düzenlenmesi ek dizinlerle yapıldığında, bu dizinlerin yüklenebilmesi için <code>application.rb</code> dosyasında tanımlanması gerekir.</p>
+                          <pre><code class="language-ruby"># config/application.rb
+config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]</code></pre>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <p>Tarih veya para birimi biçimleri gibi paylaşılan yerelleştirme seçeneklerini <code>locales</code> dizininin altındaki dosyalara yerleştirin.</p>
+                    </li>
+                    <li>
+                      <p>I18n yöntemlerinin kısa biçimlerini kullanın: <code>I18n.translate</code> yerine <code>I18n.t</code> ve <code>I18n.localize</code> yerine <code>I18n.l</code>.</p>
+                    </li>
+                    <li>
+                      <p>Görünümlerde kullanılan metinler için "lazy lookup" kullanın. Diyelim ki şu yapıya sahibiz:</p>
+                      <pre><code class="language-ruby">en:
+  users:
+    show:
+      title: 'User details page'</code></pre>
+                      <p><code>users.show.title</code> değeri <code>app/views/users/show.html.haml</code> içinde şu şekilde kullanılabilir:</p>
+                      <pre><code class="language-ruby">= t '.title'</code></pre>
+                    </li>
+                    <li>
+                      <p><code>:scope</code> yerine nokta ile ayrılmış anahtarlar kullanın.</p>
+                      <pre><code class="language-ruby"># bad
+I18n.t :record_invalid, scope: [:activerecord, :errors, :messages]
+
+# good
+I18n.t 'activerecord.errors.messages.record_invalid'</code></pre>
+                    </li>
+                    <li>
+                      <p>Rails I18n ile ilgili daha detaylı bilgi <a href="https://guides.rubyonrails.org/i18n.html" target="blank" rel="nofollow">Rails Guides</a>'da bulunabilir.</p>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / internationalization -->
+
+                <!-- assets -->
+                <section id="section-8">
+                  <h2 class="section-title-2">Varlıklar (Assets) <a data-scroll href="#section-8" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>Özel stil sayfaları (stylesheets), javascript dosyalarını ve resimleri <code>app/assets</code> altında saklayın.</p>
+                    </li>
+                    <li>
+                      <p>Uygulamanın kapsamına gerçekten uymayan kütüphaneler için <code>lib/assets</code> dizinini kullanın.</p>
+                    </li>
+                    <li>
+                      <p>JQuery ve bootstrap gibi üçüncü parti kodlar <code>vendor/assets</code> içine yerleştirilmelidir.</p>
+                    </li>
+                    <li>
+                      <p>Mümkünse, varlıkların gem verisoyonlarını kullanın (örneğin, <code>jquery-rails</code>, <code>jquery-ui-rails</code>, <code>bootstrap-sass</code>, <code>zurb-foundation</code>). </p>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / assets -->
+
+                <!-- mailers -->
+                <section id="section-9">
+                  <h2 class="section-title-2">E-posta Göndericileri (Mailers) <a data-scroll href="#section-9" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>E-posta göndericilerini <code>SomethingMailer</code> olarak adlandırın. Mailer soneki olmadan, neyin mailer olduğu ve hangi görünümün bu mailer ile ilgili olduğu hemen anlaşılamaz.</p>
+                    </li>
+                    <li>
+                      <p>Hem HTML hem de düz metin görünüm şablonlarını kullanın.</p>
+                    </li>
+                    <li>
+                      <p>Geliştirme ortamınızda başarısız e-posta tesliminde ortaya çıkan hataları etkinleştirin. Hatalar varsayılan olarak devre dışıdır.</p>
+                      <pre><code class="language-ruby"># config/environments/development.rb
+
+config.action_mailer.raise_delivery_errors = true</code></pre>
+                    </li>
+                    <li>
+                      <p>Geliştirme ortamında <a href="https://github.com/sj26/mailcatcher" target="blank" rel="nofollow">Mailcatcher</a> gibi yerel bir SMTP sunucusu kullanın.</p>
+                      <pre><code class="language-ruby"># config/environments/development.rb
+
+config.action_mailer.smtp_settings = {
+  address: 'localhost',
+  port: 1025,
+  # daha fazla ayar
+}</code></pre>
+                    </li>
+                    <li>
+                      <p>Ana bilgisayar adı için varsayılan ayarları tanımlayın.</p>
+                      <pre><code class="language-ruby"># config/environments/development.rb
+config.action_mailer.default_url_options = { host: "#{local_ip}:3000" }
+
+# config/environments/production.rb
+config.action_mailer.default_url_options = { host: 'your_site.com' }
+
+# in your mailer class
+default_url_options[:host] = 'your_site.com'</code></pre>
+                    </li>
+                    <li>
+                      <p><code>from</code> ve adresleri doğru şekilde biçimlendirin. Aşağıdaki formatı kullanın:</p>
+                      <pre><code class="language-ruby"># in your mailer class
+default from: 'Your Name &lt;info@your_site.com&gt;'</code></pre>
+                    </li>
+                    <li>
+                      <p>Test ortamınız için e-posta teslim yönteminin <code>test</code> olarak ayarlandığından emin olun.</p>
+                      <pre><code class="language-ruby"># config/environments/test.rb
+
+config.action_mailer.delivery_method = :test</code></pre>
+                    </li>
+                    <li>
+                      <p>Geliştirme ve üretim için teslim yöntemi <code>smtp</code> olmalıdır.</p>
+                      <pre><code class="language-ruby"># config/environments/development.rb, config/environments/production.rb
+
+config.action_mailer.delivery_method = :smtp</code></pre>
+                    </li>
+                    <li>
+                      <p>HTML e-postaları gönderirken - bazı istemcilerin dış stillerle ilgili sorunları olduğundan - tüm stillerin satır içi olması gerekir. Ancak bu, bakımlarını zorlaştırır ve kod tekrarına yol açar. Stilleri dönüştüren ve bunlara karşılık gelen html etiketlerine yerleştiren iki benzer gem vardır: <a href="https://github.com/fphilipe/premailer-rails" target="blank" rel="nofollow">premailer-rails</a> ve <a href="https://github.com/Mange/roadie" target="blank" rel="nofollow">roadie</a>.</p>
+                    </li>
+                    <li>
+                      <p>Sayfa yanıtı oluştururken e-posta göndermekten kaçınılmalıdır. Sayfanın yüklenmesinde gecikmelere neden olur ve birden fazla e-posta gönderilirse istek zaman aşımına uğrayabilir. Bunun üstesinden gelmek için <a href="https://github.com/mperham/sidekiq" target="blank" rel="nofollow">sidekiq</a> gem yardımı ile e-posta arka planda gönderilebilir.</p>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / mailers -->
+
+                <!-- core extensions -->
+                <section id="section-10">
+                  <h2 class="section-title-2">Çekirdek Uzantılar (Core Extension) <a data-scroll href="#section-10" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p><code>ActiveSupport#try!</code> yerine Ruby 2.3'ün güvenli navigasyon operatörünü <code>&.</code> kullanmayı tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+obj.try! :fly
+
+# good
+obj&.fly</code></pre>
+                    </li>
+                    <li>
+                      <p>ActiveSupport takma adları yerine Ruby'nin standart kütüphane yöntemlerini tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+'the day'.starts_with? 'th'
+'the day'.ends_with? 'ay'
+
+# good
+'the day'.start_with? 'th'
+'the day'.end_with? 'ay'</code></pre>
+                    </li>
+                    <li>
+                      <p>Nadiren kullanılan ActiveSupport uzantıları yerine Ruby'nin standart kütüphanesini tercih edin.</p>
+                      <pre><code class="language-ruby"># bad
+(1..50).to_a.forty_two
+1.in? [1, 2]
+'day'.in? 'the day'
+
+# good
+(1..50).to_a[41]
+[1, 2].include? 1
+'the day'.include? 'day'</code></pre>
+                    </li>
+                    <li>
+                      <p>ActiveSupport'un <code>Array#inquiry</code> ve <code>String#inquiry</code> yöntemleri yerine Ruby karşılaştırma işleçlerini kullanın.</p>
+                      <pre><code class="language-ruby"># bad - String#inquiry
+ruby = 'two'.inquiry
+ruby.two?
+
+# good
+ruby = 'two'
+ruby == 'two'
+
+# bad - Array#inquiry
+pets = %w(cat dog).inquiry
+pets.gopher?
+
+# good
+pets = %w(cat dog)
+pets.include? 'cat'</code></pre>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / core extensions -->
+
+                <!-- time -->
+                <section id="section-11">
+                  <h2 class="section-title-2">Zaman <a data-scroll href="#section-11" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>Saat diliminizi <code>application.rb</code>'de uygun şekilde yapılandırın.</p>
+                      <pre><code class="language-ruby">config.time_zone = 'Eastern European Time'
+# optional - note it can be only :utc or :local (default is :utc)
+config.active_record.default_timezone = :local</code></pre>
+                    </li>
+                    <li>
+                      <p><code>Time.parse</code> kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+Time.parse('2015-03-02 19:05:37') # => Will assume time string given is in the system's time zone.
+
+# good
+Time.zone.parse('2015-03-02 19:05:37') # => Mon, 02 Mar 2015 19:05:37 EET +02:00</code></pre>
+                    </li>
+                    <li>
+                      <p><code>String#to_time</code> kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad - assumes time string given is in the system's time zone.
+'2015-03-02 19:05:37'.to_time
+
+# good
+Time.zone.parse('2015-03-02 19:05:37') # => Mon, 02 Mar 2015 19:05:37 EET +02:00</code></pre>
+                    </li>
+                    <li>
+                      <p><code>Time.now</code> kullanmayın.</p>
+                      <pre><code class="language-ruby"># bad
+Time.now # => Returns system time and ignores your configured time zone.
+
+# good
+Time.zone.now # => Fri, 12 Mar 2014 22:04:47 EET +02:00
+Time.current # Same thing but shorter.</code></pre>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / time -->
+
+                <!-- bundler -->
+                <section id="section-12">
+                  <h2 class="section-title-2">Paket Yöneticisi (Bundler) <a data-scroll href="#section-12" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>Gemfile'da sadece geliştirme veya test için kullanılan gemleri uygun şekilde gruplayın.</p>
+                    </li>
+                    <li>
+                      <p>Projelerinizde yalnızca belirli gemleri kullanın. Az bilinen gemleri eklemeyi düşünüyorsanız, önce kaynak kodunu dikkatlice gözden geçirmelisiniz.</p>
+                    </li>
+                    <li>
+                      <p>Farklı işletim sistemleri kullanan birden fazla geliştiriciye sahip projelerde, işletim sistemine özgü gemlerin doğal sonucu olarak <code>Gemfile.lock</code> sürekli değişecektir. OS X'e özgü gemleri <code>darwin</code> grubuna ve Linux'a özgü gemleri <code>linux</code> grubuna ekleyin:</p>
+                      <pre><code class="language-ruby"># Gemfile
+group :darwin do
+  gem 'rb-fsevent'
+  gem 'growl'
+end
+
+group :linux do
+  gem 'rb-inotify'
+end</code></pre>
+                      <p>Geliştirme ortamına uygun gemleri çağırmak için <code>config/application.rb</code> dosyasına şunu ekleyin:</p>
+                      <pre><code class="language-ruby">platform = RUBY_PLATFORM.match(/(linux|darwin)/)[0].to_sym
+Bundler.require(platform)</code></pre>
+                    </li>
+                    <li>
+                      <p><code>Gemfile.lock</code> dosyasını versiyon kontrolünden çıkarmayın. Bu rastgele oluşturulmuş bir dosya değildir; takım üyeleriniz <code>bundle install</code> komutunu kullandıklarında tüm gem versiyonlarının aynı olmasını sağlar.</p>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / bundler -->
+
+                <!-- managing processes -->
+                <section id="section-13">
+                  <h2 class="section-title-2">Süreçleri Yönetmek <a data-scroll href="#section-13" class="anchor" data-toggle="tooltip" data-placement="top" title="Linki kopyala"><i class="icon-hash"></i></a></h2>
+                  <ul>
+                    <li>
+                      <p>Projeleriniz çeşitli dış süreçlere bağlıysa, onları yönetmek için <a href="https://github.com/ddollar/foreman" target="blank" rel="nofollow">foreman</a> kullanın.</p>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / managing processes -->
+
+                <!-- further reading -->
+                <section>
+                  <h2 class="section-title-2">Diğer Kaynaklar </h2>
+                  <p>Rails stili üzerine yazılmış birkaç mükemmel kaynak daha bulunmaktadır, boş zamanınız varsa okumanızı tavsiye ediyoruz.</p>
+                  <ul>
+                    <li>
+                      <p><a href="https://www.informit.com/store/rails-5-way-9780134657677" target="blank" rel="nofollow">The Rails 5 Way</a></p>
+                    </li>
+                    <li>
+                      <p><a href="https://guides.rubyonrails.org/" target="blank" rel="nofollow">Ruby on Rails Guides</a></p>
+                    </li>
+                    <li>
+                      <p><a href="https://pragprog.com/book/rspec3/effective-testing-with-rspec-3" target="blank" rel="nofollow">Effective Testing with RSpec 3</a></p>
+                    </li>
+                    <li>
+                      <p><a href="https://pragprog.com/book/hwcuc/the-cucumber-book" target="blank" rel="nofollow">The Cucumber Book</a></p>
+                    </li>
+                    <li>
+                      <p><a href="https://leanpub.com/everydayrailsrspec" target="blank" rel="nofollow">Everyday Rails Testing with RSpec</a></p>
+                    </li>
+                    <li>
+                      <p><a href="https://pragprog.com/book/nrtest3/rails-5-test-prescriptions" target="blank" rel="nofollow">Rails 5 Test Prescriptions</a></p>
+                    </li>
+                    <li>
+                      <p><a href="http://www.betterspecs.org/" target="blank" rel="nofollow">Better Specs for RSpec</a></p>
+                    </li>
+                  </ul>
+                </section>
+                <!-- / further reading -->
+
+              </article>
+
+              <aside class="col-md-3 col-xxl-3 d-none d-md-block">
+                <div class="sticky">
+                  <ul id="toc" class="nav flex-column toc">
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-1">Yapılandırma</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-2">Yönlendirme</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-3">Denetleyiciler</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-4">Modeller</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-5">Taşıma İşlemleri</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-6">Görünümler</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-7">Uluslararasılaştırma</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-8">Varlıklar</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-9">E-posta Göndericileri</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-10">Çekirdek Uzantılar</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-11">Zaman</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-12">Paket Yöneticisi</a>
+                    </li>
+                    <li class="nav-item">
+                      <a data-scroll class="nav-link" href="#section-13">Süreçleri Yönetmek</a>
+                    </li>
+                  </ul>
+                </div>
+              </aside>
+
+            </div>
+
+          </article>
+          <!-- / content -->
+
+        </div>
+      </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="bg-dark">
+      <div class="container">
+        <div class="row gutter-3">
+          <div class="col-12 col-md-2">
+            <a href=""><img src="assets/images/logo-white.png" alt="Logo"></a>
+          </div>
+          <div class="col-12 col-md-6 text-white">
+            <p class="mb-4"><a href="https://github.com/rubocop-hq/ruby-style-guide" target="blank" rel="nofollow">Rubocop</a> stil rehberinden esinlenilmiştir. Bu içerik <a href="https://creativecommons.org/licenses/by/3.0/deed.en_US" target="blank" rel="nofollow">Creative Commons Attribution 3.0 Unported License</a> lisansı altındadır.</p>
+            <p>Yayıncı, <a href="https://www.axgirisim.com/" target="blank">Ax Girişim Danışmanlığı</a></p>
+          </div>
+          <div class="col-12 col-md-4 col-lg-2 ml-auto text-md-right">
+            <div class="dropdown">
+              <button class="btn btn-inverted btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Türkçe
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="https://github.com/rubocop-hq/ruby-style-guide" target="blank" rel="nofollow">English</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- / footer -->
+
+    <script src="assets/js/vendor.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
