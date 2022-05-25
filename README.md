@@ -1,6 +1,6 @@
 # Ruby Style Guide
 
-http://www.ruby.info.tr/
+https://melihkocaturk.github.io/ruby-style-guide/
 
 ## Hakkında
 
